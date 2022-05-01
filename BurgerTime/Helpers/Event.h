@@ -1,0 +1,9 @@
+#pragma once
+
+enum class Event {
+	PLAYER_DEATH,
+	ENEMY_KILL,
+	BURGER_DROP,
+	POINTS_ADDED,
+	POINTS_SUBTRACTED
+};
