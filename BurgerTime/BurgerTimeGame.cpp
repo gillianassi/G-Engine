@@ -17,6 +17,9 @@
 #include "EngineComponents/TransformComponent.h"
 #include "EngineComponents/FPSComponent.h"
 
+#include "Audio/BaseAudio.h"
+#include "ResourceManagement/Locator.h"
+
 // Game includes
 //#include "TrashTheCacheComponent.h"
 #include "Components/PeterPepperComponent.h"
@@ -34,8 +37,22 @@ using namespace dae;
 using ControllerButton = dae::Controller::ControllerButton;
 using ActivationState = dae::InputManager::ActivationState;
 
+BurgerTimeGame::BurgerTimeGame()
+{
+	//m_pAudio = new BaseAudio();
+	//Locator::initialize();
+	//Locator::provide(m_pAudio);
+}
+
+BurgerTimeGame::~BurgerTimeGame()
+{
+	//delete m_pAudio;
+	//m_pAudio = nullptr;
+}
+
 void BurgerTimeGame::LoadGame() const
 {
+
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 	// ToDo: add render component referebce ub text component
 	// ToDo: add TetComponent in constructor of fpsComponent

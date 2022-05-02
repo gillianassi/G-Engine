@@ -215,7 +215,11 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="..\3rdParty\ImGui\imgui.h" />
     <ClInclude Include="..\3rdParty\ImGui\imgui_internal.h" />
     <ClInclude Include="..\3rdParty\ImGui\imgui_plot.h" />
+    <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\BaseAudio.h" />
+    <ClInclude Include="Audio\LoggedAudio.h" />
     <ClInclude Include="Core\GEngine.h" />
+    <ClInclude Include="Audio\NullAudio.h" />
     <ClInclude Include="Core\Renderer.h" />
     <ClInclude Include="Core\SingleInstance.h" />
     <ClInclude Include="Core\Singleton.h" />
@@ -231,6 +235,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="ResourceManagement\Font.h" />
+    <ClInclude Include="ResourceManagement\Locator.h" />
     <ClInclude Include="ResourceManagement\ResourceManager.h" />
     <ClInclude Include="ResourceManagement\Texture2D.h" />
     <ClInclude Include="SceneGraph\GameObject.h" />
@@ -290,6 +295,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Audio\BaseAudio.cpp" />
     <ClCompile Include="Core\GEngine.cpp" />
     <ClCompile Include="Core\Renderer.cpp" />
     <ClCompile Include="Core\Time.cpp" />
