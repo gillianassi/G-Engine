@@ -1,8 +1,8 @@
 #pragma once
-#include "Audio.h"
+#include "AudioInterface.h"
 #include <map>
 
-class BaseAudio final : public Audio
+class BaseAudio final : public AudioInterface
 {
 
 public:

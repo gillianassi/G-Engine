@@ -17,6 +17,6 @@ public:
 	void Die();
 private:
 	bool m_IsDead;
-	//int m_CounSoundID;
+	int m_CounSoundID;
 };
 

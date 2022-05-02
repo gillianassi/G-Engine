@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/GEngine.h"
 
-//class Audio;
+class AudioInterface;
 class BurgerTimeGame final : public dae::GEngine
 {
 public:
@@ -15,5 +15,5 @@ public:
 	virtual void LoadGame() const override;
 
 private:
-	//Audio* m_pAudio;
+	AudioInterface* m_pAudio;
 };

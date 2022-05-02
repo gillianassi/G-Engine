@@ -1,7 +1,7 @@
 #pragma once
-#include "Audio.h"
+#include "AudioInterface.h"
 
-class NullAudio : public Audio
+class NullAudio : public AudioInterface
 {
 public:
 	NullAudio() = default;

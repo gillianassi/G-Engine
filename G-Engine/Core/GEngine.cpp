@@ -11,7 +11,8 @@
 #include "Input/InputManager.h"
 #include "Core/Time.h"
 
-
+#include "Audio/BaseAudio.h"
+#include "ResourceManagement/Locator.h"
 
 
 using namespace std;
@@ -31,6 +32,7 @@ void PrintSDLVersion()
 
 void dae::GEngine::Initialize()
 {
+
 	PrintSDLVersion();
 	
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 

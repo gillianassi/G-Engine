@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
-#include "Audio.h"
-class LoggedAudio : public Audio
+#include "AudioInterface.h"
+class LoggedAudio : public AudioInterface
 {
 public:
-    LoggedAudio(Audio& wrapped)
+    LoggedAudio(AudioInterface& wrapped)
         : wrapped_(wrapped)
     {}
 
@@ -43,5 +43,5 @@ private:
         std::cout << message << std::endl;
     }
 
-    Audio& wrapped_;
+    AudioInterface& wrapped_;
 };

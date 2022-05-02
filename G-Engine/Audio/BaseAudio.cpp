@@ -84,6 +84,7 @@ BaseAudio::BaseAudio():
 	m_SoundMap{},
 	m_IDMap{}
 {
+	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, MIX_CHANNELS);
 }
 BaseAudio::~BaseAudio()
 {
@@ -93,6 +94,7 @@ BaseAudio::~BaseAudio()
 		(*it).second = nullptr;
 		it = m_SoundMap.erase(it);
 	}
+	Mix_CloseAudio();
 }
 void BaseAudio::PlaySound(int soundID)
 {

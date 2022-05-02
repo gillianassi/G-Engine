@@ -96,7 +96,7 @@
     <ClInclude Include="Input\Command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Audio\Audio.h">
+    <ClInclude Include="Audio\AudioInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Audio\BaseAudio.h">
@@ -189,6 +189,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Audio\BaseAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagement\Locator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

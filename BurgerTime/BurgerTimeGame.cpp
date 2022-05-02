@@ -39,15 +39,14 @@ using ActivationState = dae::InputManager::ActivationState;
 
 BurgerTimeGame::BurgerTimeGame()
 {
-	//m_pAudio = new BaseAudio();
-	//Locator::initialize();
-	//Locator::provide(m_pAudio);
+	m_pAudio = new BaseAudio();
+	Locator::provide(m_pAudio);
 }
 
 BurgerTimeGame::~BurgerTimeGame()
 {
-	//delete m_pAudio;
-	//m_pAudio = nullptr;
+	delete m_pAudio;
+	m_pAudio = nullptr;
 }
 
 void BurgerTimeGame::LoadGame() const

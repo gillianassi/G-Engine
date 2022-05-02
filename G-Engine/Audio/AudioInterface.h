@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
-class Audio
+class AudioInterface
 {
 public:
-	virtual ~Audio() {};
+	virtual ~AudioInterface() {};
 	virtual void PlaySound(int soundID) = 0;
 	virtual void StopSound(int soundID) = 0;
 	virtual void StopAllSounds() = 0;

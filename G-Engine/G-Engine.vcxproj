@@ -88,7 +88,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -97,6 +97,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <IntrinsicFunctions>false</IntrinsicFunctions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +118,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -127,6 +128,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <PrecompiledHeaderFile>GEnginePCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,7 +151,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -158,6 +160,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <IntrinsicFunctions>false</IntrinsicFunctions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,7 +181,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -188,6 +191,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <PrecompiledHeaderFile>GEnginePCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -215,7 +219,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="..\3rdParty\ImGui\imgui.h" />
     <ClInclude Include="..\3rdParty\ImGui\imgui_internal.h" />
     <ClInclude Include="..\3rdParty\ImGui\imgui_plot.h" />
-    <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\AudioInterface.h" />
     <ClInclude Include="Audio\BaseAudio.h" />
     <ClInclude Include="Audio\LoggedAudio.h" />
     <ClInclude Include="Core\GEngine.h" />
@@ -313,6 +317,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClCompile Include="Input\Controller.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="ResourceManagement\Font.cpp" />
+    <ClCompile Include="ResourceManagement\Locator.cpp" />
     <ClCompile Include="ResourceManagement\ResourceManager.cpp" />
     <ClCompile Include="ResourceManagement\Texture2D.cpp" />
     <ClCompile Include="SceneGraph\GameObject.cpp" />
