@@ -3,9 +3,8 @@
 class AudioInterface
 {
 public:
-	virtual ~AudioInterface() {};
-	virtual void PlaySound(int soundID) = 0;
-	virtual void StopSound(int soundID) = 0;
-	virtual void StopAllSounds() = 0;
-	virtual int AddSound(const std::string& path) = 0;
+	virtual ~AudioInterface() = default;
+	virtual void PlaySoundEffect(int soundID, int channel) = 0;
+	virtual void StopAllSoundsEffects(int channel) = 0;
+	virtual int LoadSoundEffect(const std::string& path) = 0;
 };

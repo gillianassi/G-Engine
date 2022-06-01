@@ -20,7 +20,7 @@ void PeterPepperComponent::FixedUpdate()
 
 void PeterPepperComponent::Die()
 {
-	Locator::getAudio().PlaySound(m_CounSoundID);
+	Locator::getAudio().PlaySoundEffect(m_CounSoundID);
 	m_IsDead = true;
 	Notify(this, Event::PLAYER_DEATH);
 	std::cout << "Player Died" << std::endl;

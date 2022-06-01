@@ -6,8 +6,7 @@ class NullAudio : public AudioInterface
 public:
 	NullAudio() = default;
 	virtual ~NullAudio() = default;
-	virtual void PlaySound(int) {}
-	virtual void StopSound(int) {}
-	virtual void StopAllSounds() {}
-	virtual int AddSound(const std::string&) { return -1; }
+	virtual void PlaySoundEffect(int, int channel = -1) {}
+	virtual void StopAllSoundsEffects(int channel = -1) {}
+	virtual int LoadSoundEffect(const std::string&) { return -1; }
 };

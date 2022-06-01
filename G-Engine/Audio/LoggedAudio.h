@@ -10,29 +10,23 @@ public:
 
     virtual ~LoggedAudio() = default;
 
-    virtual void PlaySound(int soundID)
+    virtual void PlaySoundEffect(int soundID,  int channel)
     {
-        log("play sound: " + soundID);
-        wrapped_.PlaySound(soundID);
+        log("play sound: " + std::to_string(soundID) + "at channel: " + std::to_string(channel));
+        wrapped_.PlaySoundEffect(soundID, channel);
     }
 
-    virtual void StopSound(int soundID)
+    virtual void StopAllSoundsEffects(int channel = -1)
     {
-        log("stop sound: " + soundID);
-        wrapped_.StopSound(soundID);
-    }
-
-    virtual void StopAllSounds()
-    {
-        log("stop all sounds");
-        wrapped_.StopAllSounds();
+        log("stop all sounds at channel: " + channel);
+        wrapped_.StopAllSoundsEffects(channel);
     }
 
 
-    virtual int AddSound(const std::string& path)
+    virtual int LoadSoundEffect(const std::string& path)
     {
 
-        int soundID = wrapped_.AddSound(path);
+        int soundID = wrapped_.LoadSoundEffect(path);
         log("Added Sound: " + path + " With ID: " + std::to_string(soundID));
         return soundID;
     }
