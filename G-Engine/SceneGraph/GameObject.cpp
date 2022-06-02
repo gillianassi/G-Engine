@@ -1,6 +1,17 @@
 #include "GEnginePCH.h"
 #include "SceneGraph/GameObject.h"
 
+void dae::GameObject::Update()
+
+{
+	for (auto& c : m_upComponentVec) c->Update();
+}
+
+void dae::GameObject::FixedUpdate()
+{
+	for (auto& c : m_upComponentVec) c->FixedUpdate();
+}
+
 void dae::GameObject::SetParent(GameObject* parent)
 {
 	if (m_pParent != parent)

@@ -34,17 +34,11 @@ namespace dae
 
 		template <typename T> T* AddComponent();
 		template <typename T> T* GetComponent() const;
-		//template <typename T> void RemoveComponent();
 
 
-		void Update()
-		{
-			for (auto& c : m_upComponentVec) c->Update();
-		};
-		void FixedUpdate()
-		{
-			for (auto& c : m_upComponentVec) c->FixedUpdate();
-		};
+		void Update();
+		void FixedUpdate();
+
 
 
 		void SetParent(GameObject* parent);

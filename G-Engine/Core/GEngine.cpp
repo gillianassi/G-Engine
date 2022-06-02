@@ -91,8 +91,6 @@ void dae::GEngine::Run()
 			lag += Time::deltaTime;
 			doContinue = input.ProcessInput();
 
-			sceneManager.Update();
-
 			// Fixed Update
 			// MaxNrOfUpdates ensures you can escape the loop if there is too much lag
 			while (lag >= m_FixedTimeStep && nrOfUpdates <= m_MaxNrOfUpdatesPerFrame)
@@ -101,6 +99,9 @@ void dae::GEngine::Run()
 				lag -= m_FixedTimeStep;
 				++nrOfUpdates;
 			}
+
+			sceneManager.Update();
+
 			// pass lag / MS_PER_UPDATE (normalized)
 			// 0 = start of previous frame, 1 = start of next frame 
 			// This numer can be used to draw a fram [0...1[ frames ahead of time

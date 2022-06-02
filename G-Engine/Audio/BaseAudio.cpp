@@ -9,16 +9,16 @@
 #include <queue>
 #include <thread>
 
-class SoundEffect final
+class SDLAudio final
 {
 public:
-	SoundEffect(const std::string& filePath):
+	SDLAudio(const std::string& filePath):
 		m_pSoundChunk{ nullptr },
 		m_FilePath{ filePath }
 	{
 	}
 
-	~SoundEffect()
+	~SDLAudio()
 	{
 		Mix_FreeChunk(m_pSoundChunk);
 		m_pSoundChunk = nullptr;
@@ -33,6 +33,11 @@ public:
 		{
 			std::string errorMsg = "SoundEffect: Unable to load " + m_FilePath + "\nSDL_mixer Error: " + Mix_GetError();
 			std::cerr << errorMsg;
+		}
+		else
+		{
+			// set the volume in case it has been set before it was loaded
+			SetVolume(m_Volume);
 		}
 	}
 
@@ -57,6 +62,9 @@ public:
 
 	void SetVolume(int value)
 	{
+
+
+		m_Volume = std::min(std::max(0,value), 128);
 		if (m_pSoundChunk != nullptr)
 		{
 			Mix_VolumeChunk(m_pSoundChunk, value);
@@ -65,31 +73,25 @@ public:
 
 	int GetVolume() const
 	{
-		if (m_pSoundChunk != nullptr)
-		{
-			return Mix_VolumeChunk(m_pSoundChunk, -1);
-		}
-		else
-		{
-			return -1;
-		}
+		return m_Volume;
 	}
 
-	void StopAll(int channel = -1)
+	static void StopAll(int channel = -1)
 	{
 		Mix_HaltChannel(channel);
 	}
 
-	void PauseAll(int channel)
+	static void PauseAll(int channel)
 	{
 		Mix_Pause(channel);
 	}
-	void ResumeAll(int channel)
+	static void ResumeAll(int channel)
 	{
 		Mix_Resume(channel);
 	}
 
 private:
+	int m_Volume = 128;
 	const std::string m_FilePath;
 	Mix_Chunk* m_pSoundChunk;
 };
@@ -101,28 +103,44 @@ public:
 	AudioManagerImpl()
 	{
 		Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, MIX_CHANNELS);
+
+		// threading
+		m_SoundThread = std::thread(&AudioManagerImpl::HandleSoundLoop, this);
 	}
 	~AudioManagerImpl()
 	{
+
+		// Lock to access the map
+		std::lock_guard<std::mutex> lockGuard(m_SoundMutex);
 		for (IDAudioMap::iterator it = m_SoundMap.begin(); it != m_SoundMap.end();)
 		{
 			delete (*it).second;
 			(*it).second = nullptr;
 			it = m_SoundMap.erase(it);
 		}
+		endThread = true;
+		// let the sound queue thread quit
+		m_SoundQueueCV.notify_all();
+		//Finish sound thread
+		m_SoundThread.join();
+		// close the audio
 		Mix_CloseAudio();
 	}
 
 	void PlaySoundEffect(int soundID, int channel)
 	{
-		(*m_SoundMap.find(soundID)).second->PlaySoundEffect(0, channel);
-	}
-
-	void StopAllSoundsEffects(int channel)
-	{
-		for (const auto& sample : m_SoundMap)
+		std::lock_guard<std::mutex> lockGuard(m_SoundMutex);
+		IDAudioMap::iterator it = m_SoundMap.find(soundID);
+		// does there exist a sound in the map with this ID
+		if (it != m_SoundMap.end())
 		{
-			sample.second->StopAll();
+			m_pPlayQueue.push(PlayRequest((*it).second, channel));
+			//Notify sound thread that a change happened
+			m_SoundQueueCV.notify_all();
+		}
+		else
+		{
+			std::cout << "Unregistered Sound with ID: " <<  std::to_string(soundID) << std::endl;
 		}
 	}
 
@@ -139,7 +157,7 @@ public:
 		// add It to the path map but do not load it yet
 		m_IDMap[path] = nextFreeID;
 		// add an unloaded soundeffect to the map
-		m_SoundMap[nextFreeID] = new SoundEffect(path);
+		m_SoundMap[nextFreeID] = new SDLAudio(path);
 		// push it to the load queue
 		m_pLoadQueue.push(m_SoundMap[nextFreeID]);
 		// set the new free ID
@@ -150,41 +168,81 @@ public:
 		return nextFreeID - 1; // return the given Id
 	}
 
+	void SetVolume(int soundID, float fraction)
+	{
+		IDAudioMap::iterator it = m_SoundMap.find(soundID);
+		if (it == m_SoundMap.end())
+		{
+			std::cout << "Warning: BaseAudio.cpp, SetVolume()" << std::to_string(soundID) << std::endl;
+			std::cout << "No sound found with ID: " << std::to_string(soundID) << std::endl;
+			return;
+		}
+		int SDLVolume = static_cast<int>(std::round(fraction * 128.f));
+		(*it).second->SetVolume(SDLVolume);
+		
+	}
+
+	float GetVolume(int soundID)
+	{
+		IDAudioMap::iterator it = m_SoundMap.find(soundID);
+		if (it == m_SoundMap.end())
+		{
+			std::cout << "Warning: BaseAudio.cpp, GetVolume()" << std::to_string(soundID) << std::endl;
+			std::cout << "No sound found with ID: " << std::to_string(soundID) << std::endl;
+			return -1.f;
+		}
+		return (float((*it).second->GetVolume()) / 128.f);
+	}
+
+
+	void StopAllSoundsEffects(int channel)
+	{
+		SDLAudio::StopAll(channel);
+	}
+
+	void PauseAll(int channel)
+	{
+		SDLAudio::PauseAll(channel);
+	}
+	void ResumeAll(int channel)
+	{
+		SDLAudio::ResumeAll(channel);
+	}
+
 
 private:
 	void HandleSoundLoop()
 	{
 		while (true)
 		{
-			std::unique_lock<std::mutex> lock(m_SoundMutex);
 			// prioritize playing sounds
 			do
 			{
 				if (!m_pPlayQueue.empty())
 				{
+					std::unique_lock<std::mutex> playLock(m_SoundMutex);
 					// Get the first sound effect to play from the queue
-					SoundEffect* pSound = m_pPlayQueue.front();
+					PlayRequest soundRequest = m_pPlayQueue.front();
 					//Pop front
 					m_pPlayQueue.pop();
 
 					//Unlock the lock
-					lock.unlock();
+					playLock.unlock();
 
-					//Do stuff
-					pSound->Load();
-					// how to give the channel?
-					// ---------------------------------------------------------------------------------
-					// struct? pointer - channel struct
-					// 
-					pSound->PlaySoundEffect(0);
+
+					// Be sure that the sound is loaded before you play
+					soundRequest._soundEffect->Load();
+					// play the sound
+					soundRequest._soundEffect->PlaySoundEffect(0, soundRequest._playChannel);
 				}
 
 			} while (!m_pPlayQueue.empty());
 
+			std::unique_lock<std::mutex> lock(m_SoundMutex);
 			if (!m_pLoadQueue.empty())
 			{
 				// Get the first sound effect to load from the queue
-				SoundEffect* pSound = m_pLoadQueue.front();
+				SDLAudio* pSound = m_pLoadQueue.front();
 				// Pop front
 				m_pLoadQueue.pop();
 
@@ -203,7 +261,22 @@ private:
 		}
 	}
 
-	using IDAudioMap = std::map<int, SoundEffect*>;
+	// A struct of a combination of a sound effect and it's channel
+	struct PlayRequest
+	{
+	public:
+		PlayRequest(SDLAudio* soundEffect, int channel = -1):
+			_soundEffect{ soundEffect },
+			_playChannel{ channel }
+		{}
+
+		SDLAudio* _soundEffect;
+		int _playChannel;
+	};
+
+	bool endThread = false;
+
+	using IDAudioMap = std::map<int, SDLAudio*>;
 	using PathIDMap = std::map<const std::string, int>;
 	IDAudioMap m_SoundMap;
 	PathIDMap m_IDMap;
@@ -213,8 +286,8 @@ private:
 	std::mutex m_SoundMutex;
 	std::condition_variable m_SoundQueueCV;
 
-	std::queue<SoundEffect*> m_pPlayQueue;
-	std::queue<SoundEffect*> m_pLoadQueue;
+	std::queue<PlayRequest> m_pPlayQueue;
+	std::queue<SDLAudio*> m_pLoadQueue;
 
 
 	int nextFreeID;
@@ -226,16 +299,36 @@ BaseAudio::BaseAudio():
 {
 }
 
-void BaseAudio::PlaySoundEffect(int soundID, int channel)
+void BaseAudio::PlaySound(int soundID, int channel)
 {
 	m_pImpl->PlaySoundEffect(soundID, channel);
 }
-void BaseAudio::StopAllSoundsEffects(int channel)
+
+int BaseAudio::LoadSound(const std::string& path)
+{
+	return m_pImpl->LoadSoundEffect(path);
+}
+
+void BaseAudio::SetVolume(int sounID, float fraction)
+{
+	m_pImpl->SetVolume(sounID, fraction);
+}
+
+float BaseAudio::GetVolume(int sounID)
+{
+	return m_pImpl->GetVolume(sounID);
+}
+
+
+void BaseAudio::StopAllSounds(int channel)
 {
 	m_pImpl->StopAllSoundsEffects(channel);
 }
-
-int BaseAudio::LoadSoundEffect(const std::string& path)
+void BaseAudio::PauseAllSounds(int channel)
 {
-	return m_pImpl->LoadSoundEffect(path);
+	m_pImpl->PauseAll(channel);
+}
+void BaseAudio::ResumeAllSounds(int channel)
+{
+	m_pImpl->ResumeAll(channel);
 }
