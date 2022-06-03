@@ -40,7 +40,7 @@ void dae::Renderer::Init(SDL_Window * window)
 
 }
 
-void dae::Renderer::Render() const
+void dae::Renderer::StartDraw() const
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
@@ -50,15 +50,36 @@ void dae::Renderer::Render() const
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_Window);
 	ImGui::NewFrame();
+}
 
-	SceneManager::GetInstance().Render();
+void dae::Renderer::Render() const
+{
 
-	ShowDearImGuiExercises();
+
+
+	//SceneManager::GetInstance().Render();
+
+
+}
+
+void dae::Renderer::EndDraw() const
+{
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
 	
 	SDL_RenderPresent(m_Renderer);
+
+	// https://github.com/ocornut/imgui/issues/5086
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+	}
 }
 
 void dae::Renderer::Destroy()

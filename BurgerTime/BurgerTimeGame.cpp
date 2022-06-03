@@ -55,22 +55,20 @@ void BurgerTimeGame::LoadGame() const
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 	// ToDo: add render component referebce ub text component
 	// ToDo: add TetComponent in constructor of fpsComponent
-	auto go = std::make_shared<GameObject>();
+	auto go = scene.AddChild("background");
 	go->AddComponent<RenderComponent>();
 	go->GetComponentOfType<RenderComponent>()->SetTexture("background.jpg");
 	go->AddComponent<TransformComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(0, 0);
-	scene.Add(go);
 
 
-	go = std::make_shared<GameObject>();
+	go = scene.AddChild("logo");
 	go->AddComponent<RenderComponent>();
 	go->GetComponentOfType<RenderComponent>()->SetTexture("logo.png");
 	go->AddComponent<TransformComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(216, 180);
-	scene.Add(go);
 
-	go = std::make_shared<GameObject>();
+	go = scene.AddChild("Title");
 	go->AddComponent<RenderComponent>();
 	go->AddComponent<TransformComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(80, 20);
@@ -78,9 +76,9 @@ void BurgerTimeGame::LoadGame() const
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	go->GetComponentOfType<TextComponent>()->SetFont(font);
 	go->GetComponentOfType<TextComponent>()->SetText("Programming 4 Assignment");
-	scene.Add(go);
 
-	go = std::make_shared<GameObject>();
+
+	go = scene.AddChild("fpsCounter");
 	go->AddComponent<RenderComponent>();
 	go->AddComponent<TransformComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(10, 10);
@@ -90,16 +88,13 @@ void BurgerTimeGame::LoadGame() const
 	go->GetComponentOfType<TextComponent>()->SetText("XX FPS");
 	go->AddComponent<FPSComponent>();
 
-	scene.Add(go);
-
 	// Week 5
 	// Achievment Manager
-	auto achievement = std::make_shared<GameObject>();
+	auto achievement = scene.AddChild("achievement");
 	auto achievementComponent = achievement->AddComponent<AchievementComponent>();
 
-	scene.Add(achievement);
 	// Player 1 Life display
-	auto player1LiveDisplay = std::make_shared<GameObject>();
+	auto player1LiveDisplay = scene.AddChild("player1LiveDisplay");
 	player1LiveDisplay->AddComponent<RenderComponent>();
 	auto transformComponent = player1LiveDisplay->AddComponent<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 100.0f);
@@ -108,16 +103,14 @@ void BurgerTimeGame::LoadGame() const
 	textComponent->SetFont(font);
 	textComponent->SetColor(SDL_Color{ 255, 255, 0 });
 	LivesComponent* Player1Lives = player1LiveDisplay->AddComponent<LivesComponent>();
-	scene.Add(player1LiveDisplay);
 
 	// Player1 Actor
-	auto peterPepper1 = std::make_shared<GameObject>();
+	auto peterPepper1 = scene.AddChild("peterPepper1");
 	auto peterPepper1Component = peterPepper1->AddComponent<PeterPepperComponent>();
 	peterPepper1Component->AddObserver(Player1Lives);
-	scene.Add(peterPepper1);
 
 	// Player1 Score Display
-	auto player1Score = std::make_shared<GameObject>();
+	auto player1Score = scene.AddChild("player1Score");
 	transformComponent = player1Score->AddComponent<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 200.0f);
 	textComponent = player1Score->AddComponent<TextComponent>();
@@ -127,11 +120,9 @@ void BurgerTimeGame::LoadGame() const
 	player1Score->AddComponent<RenderComponent>();
 	auto Player1scoreComponent = player1Score->AddComponent<ScoreComponent>();
 	Player1scoreComponent->AddObserver(achievementComponent);
-	scene.Add(player1Score);
-
-	scene.Add(peterPepper1);
+;
 	// Player 2 Life display
-	auto player2LiveDisplay = std::make_shared<GameObject>();
+	auto player2LiveDisplay = scene.AddChild("player2LiveDisplay");
 	player2LiveDisplay->AddComponent<RenderComponent>();
 	transformComponent = player2LiveDisplay->AddComponent<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 300.0f);
@@ -140,17 +131,15 @@ void BurgerTimeGame::LoadGame() const
 	textComponent->SetFont(font);
 	textComponent->SetColor(SDL_Color{ 0, 100, 100 });
 	LivesComponent* Player2Lives = player2LiveDisplay->AddComponent<LivesComponent>();
-	scene.Add(player2LiveDisplay);
 
 	// Player 2 Actor
-	auto peterPepper2 = std::make_shared<GameObject>();
+	auto peterPepper2 = scene.AddChild("peterPepper2");
 	auto peterPepper2Component = peterPepper2->AddComponent<PeterPepperComponent>();
 	peterPepper2Component->AddObserver(Player2Lives);
-	scene.Add(peterPepper2);
 
 
 	// Player2 Score Display
-	auto player2Score = std::make_shared<GameObject>();
+	auto player2Score = scene.AddChild("player2Score");
 	transformComponent = player2Score->AddComponent<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 400.0f);
 	textComponent = player2Score->AddComponent<TextComponent>();
@@ -159,27 +148,22 @@ void BurgerTimeGame::LoadGame() const
 	textComponent->SetColor(SDL_Color{ 0, 100, 100 });
 	player2Score->AddComponent<RenderComponent>();
 	auto Player2scoreComponent = player2Score->AddComponent<ScoreComponent>();
-	Player2scoreComponent->AddObserver(achievementComponent);
-	scene.Add(player2Score);
 
 	// Enemy 1 
-	auto enemy1 = std::make_shared<GameObject>();
+	auto enemy1 = scene.AddChild("enemy1");
 	auto enemyComp = enemy1->AddComponent<EnemyComponent>();
 	enemyComp->AddObserver(Player1scoreComponent);
-	scene.Add(enemy1);
 	// Enemy 2
-	auto enemy2 = std::make_shared<GameObject>();
+	auto enemy2 = scene.AddChild("enemy2");
 	enemyComp = enemy2->AddComponent<EnemyComponent>();
 	enemyComp->AddObserver(Player2scoreComponent);
-	scene.Add(enemy2);
 
 
 	// SHARED Burger 
-	auto burger = std::make_shared<GameObject>();
+	auto burger = scene.AddChild("burger");
 	auto burgerComp = burger->AddComponent<BurgerComponent>();
 	burgerComp->AddObserver(Player2scoreComponent);
 	burgerComp->AddObserver(Player1scoreComponent);
-	scene.Add(burger);
 
 	std::cout << "Controls:" << std::endl;
 	std::cout << "\t\t[A] - Player Dies\t\t- Unique" << std::endl;
@@ -189,20 +173,20 @@ void BurgerTimeGame::LoadGame() const
 	// Instantiate Controls:
 	//p1
 	InputManager::GetInstance().AddButtonCommand<PlayerDieCommand>
-		(ControllerButton::ButtonA, ActivationState::BTN_DOWN, 0, peterPepper1.get());
+		(ControllerButton::ButtonA, ActivationState::BTN_DOWN, 0, peterPepper1);
 	InputManager::GetInstance().AddButtonCommand<EnemyKillCommand>
-		(ControllerButton::ButtonB, ActivationState::BTN_DOWN, 0, enemy1.get());
+		(ControllerButton::ButtonB, ActivationState::BTN_DOWN, 0, enemy1);
 	InputManager::GetInstance().AddButtonCommand<ReviveEnemyCommand>
-		(ControllerButton::ButtonY, ActivationState::BTN_DOWN, 0, enemy1.get());
+		(ControllerButton::ButtonY, ActivationState::BTN_DOWN, 0, enemy1);
 	//p2
 	InputManager::GetInstance().AddButtonCommand<PlayerDieCommand>
-		(ControllerButton::ButtonA, ActivationState::BTN_DOWN, 1, peterPepper2.get());
+		(ControllerButton::ButtonA, ActivationState::BTN_DOWN, 1, peterPepper2);
 	InputManager::GetInstance().AddButtonCommand<EnemyKillCommand>
-		(ControllerButton::ButtonB, ActivationState::BTN_DOWN, 1, enemy2.get());
+		(ControllerButton::ButtonB, ActivationState::BTN_DOWN, 1, enemy2);
 	InputManager::GetInstance().AddButtonCommand<ReviveEnemyCommand>
-		(ControllerButton::ButtonY, ActivationState::BTN_DOWN, 1, enemy2.get());
+		(ControllerButton::ButtonY, ActivationState::BTN_DOWN, 1, enemy2);
 	//Shared
 	InputManager::GetInstance().AddButtonCommand<BurgerDropCommand>
-		(ControllerButton::ButtonX, ActivationState::BTN_DOWN, burger.get());
+		(ControllerButton::ButtonX, ActivationState::BTN_DOWN, burger);
 
 }

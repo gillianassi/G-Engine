@@ -8,16 +8,13 @@
 namespace dae
 {
 	class Scene;
-	class Component;
+	class BaseComponent;
 	class TransformComponent;
 	class GameObject final
 	{
 	public:
-
 		
-		GameObject(bool propagateTags = true);
-
-		virtual ~GameObject() = default;
+		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
@@ -25,9 +22,17 @@ namespace dae
 
 		// scene graph
 		
-		template <typename TypeToAdd> TypeToAdd* AddComponent();
-		template <typename TypeToGet> TypeToGet* GetComponentOfType() const;
-		template <typename TypeToGet> TypeToGet* GetAllComponentsOfType() const;
+		template <typename TypeToAdd> 
+		std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToAdd>, TypeToAdd*> 
+			AddComponent();
+
+		template <typename TypeToGet>
+		std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*>
+			GetComponentOfType() const;
+
+		template <typename TypeToGet>
+		std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*>
+			GetAllComponentsOfType() const;
 
 		TransformComponent* GetTransform() const { return m_pTransform; }
 		
@@ -36,10 +41,11 @@ namespace dae
 		size_t GetChildCount() const;
 		GameObject* GetChildAt(int index) const;
 
-		void RemoveChildFromChildVec(int index);
-		void RemoveChildFromChildVec(GameObject* go);
-		void SetParent(GameObject* parent, bool hasCheckedHierarchy = false);
+		// create a new gameobject
+		GameObject* AddChild(std::string name, bool inheritTags = true);
+		// edit the hierarchy
 		void AddChild(GameObject* go, bool hasCheckedHierarchy = false);
+		void SetParent(GameObject* parent, bool hasCheckedHierarchy = false);
 
 		// base
 		bool IsEnabled() const { return m_IsEnabled; }
@@ -50,24 +56,27 @@ namespace dae
 		void AddTag(int tag, bool propagateToChildren = true);
 		
 		void Destroy() { m_IsMarkedForDestroy = true; };
-
-		
-	protected:
-
-
-
+		bool IsMarkedForDestroy() { return m_IsMarkedForDestroy; }
 
 	private:
 		friend Scene;
-		// only the scene can create GameObjects and handle them
-		//GameObject(GameObject* pParent, Scene* pScene, bool propagateTags = true);
+		GameObject(const std::string& name, GameObject* pParent, Scene* pScene, bool propagateTags = true);
 
 		void Initialize() const;
 		void Update() const;
 		void FixedUpdate() const;
-		virtual void Render() const;
-		virtual void RenderImGui() const;
+		void Render() const;
+		void RenderImGui() const;
 
+
+		void OnEnable()const;
+		void OnDIsable()const;
+		void OnDestroy()const;
+
+		void UpdateGameObjectState();
+
+		void RemoveChildFromChildVec(int index);
+		void RemoveChildFromChildVec(GameObject* go);
 
 		bool HasChildInHierarchy(GameObject* pGo);
 		
@@ -75,6 +84,7 @@ namespace dae
 		std::vector<std::unique_ptr<BaseComponent>> m_upComponentVec{};
 		std::vector<GameObject*> m_pChildrenVec{};
 
+		std::string m_Name;
 		Scene* m_pScene{};
 
 		TransformComponent* m_pTransform{};
@@ -93,7 +103,8 @@ namespace dae
 	// ******** Tempated functions *********
 	// *************************************
 	template<typename TypeToAdd>
-	inline TypeToAdd* GameObject::AddComponent()
+	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToAdd>, TypeToAdd*> 
+		GameObject::AddComponent()
 	{
 		m_upComponentVec.emplace_back(std::move(std::make_unique<TypeToAdd>(this)));
 
@@ -101,7 +112,8 @@ namespace dae
 	}
 
 	template<typename TypeToGet>
-	inline TypeToGet* GameObject::GetComponentOfType() const
+	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*> 
+		GameObject::GetComponentOfType() const
 	{
 		for (const auto& c: m_upComponentVec)
 		{
@@ -112,7 +124,8 @@ namespace dae
 	}
 
 	template<typename TypeToGet>
-	inline TypeToGet* GameObject::GetAllComponentsOfType() const
+	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*> 
+		GameObject::GetAllComponentsOfType() const
 	{
 		std::vector<TypeToGet*> componentsVec{};
 		for (const auto& c: m_upComponentVec)

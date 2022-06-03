@@ -1,9 +1,13 @@
 #include "GEnginePCH.h"
-#include "SceneGraph/GameObject.h"
+#include "GameObject.h"
 
+#include "Scene.h"
 #include "EngineComponents/TransformComponent.h"
 
-dae::GameObject::GameObject(bool propagateTags):
+dae::GameObject::GameObject(const std::string& name, GameObject* pParent, Scene* pScene, bool propagateTags):
+	m_Name{name},
+	m_pParent{pParent},
+	m_pScene{pScene},
 	m_pTransform{AddComponent<TransformComponent>()}
 {
 	if (propagateTags && m_pParent != nullptr)
@@ -16,20 +20,15 @@ dae::GameObject::GameObject(bool propagateTags):
 	}
 }
 
-//dae::GameObject::GameObject(GameObject* pParent, Scene* pScene, bool propagateTags):
-//	m_pParent{pParent},
-//	m_pScene{pScene},
-//	m_pTransform{AddComponent<TransformComponent>()}
-//{
-//	if (propagateTags && m_pParent != nullptr)
-//	{
-//		// if asked, add the parent tags
-//		for (int tag : m_pParent->GetTags())
-//		{
-//			AddTag(tag);
-//		}
-//	}
-//}
+dae::GameObject::~GameObject()
+{
+	for (size_t i = 0; i < m_pChildrenVec.size(); i++)
+	{
+		delete m_pChildrenVec[i];
+		m_pChildrenVec[i] = nullptr;
+	}
+	m_pChildrenVec.clear();
+}
 
 bool dae::GameObject::HasTag(int tag) const
 {
@@ -46,7 +45,7 @@ void dae::GameObject::AddTag(int tag, bool propagateToChildren)
 	// propagate if asked
 	if (propagateToChildren)
 	{
-		for (GameObject* pChild : m_pChildrenVec)
+		for (const auto& pChild : m_pChildrenVec)
 		{
 			pChild->AddTag(tag);
 		}
@@ -89,6 +88,15 @@ void dae::GameObject::RemoveChildFromChildVec(GameObject* go)
 
 
 
+dae::GameObject* dae::GameObject::AddChild(std::string name, bool inheritTags)
+{
+	GameObject* pChild = new GameObject(name, this, m_pScene, inheritTags); // Can't use make_shared because of private constructor
+	m_pChildrenVec.push_back(pChild);
+
+	return pChild;
+
+}
+
 void dae::GameObject::SetParent(GameObject* parent, bool hasCheckedHierarchy)
 {
 	if (!hasCheckedHierarchy)
@@ -116,6 +124,10 @@ void dae::GameObject::SetParent(GameObject* parent, bool hasCheckedHierarchy)
 		if (m_pParent != nullptr)
 		{
 			m_pParent->RemoveChildFromChildVec(this);
+		}
+		else // no parent means it is a direct child of the scene
+		{
+			m_pScene->RemoveChildFromChildVec(this);
 		}
 		// simply add the child with no extra checks
 		parent->AddChild(this, true);
@@ -156,6 +168,10 @@ void dae::GameObject::AddChild(GameObject* pGo, bool hasCheckedHierarchy)
 			// be sure that its child will be removed
 			previousChildParent->RemoveChildFromChildVec(pGo);
 		}
+		else // no parent means it is a direct child of the scene
+		{
+			m_pScene->RemoveChildFromChildVec(pGo);
+		}
 		// simply set the parent with no extra checks
 		pGo->SetParent(this, true);
 	}
@@ -193,11 +209,6 @@ bool dae::GameObject::HasChildInHierarchy(GameObject* pGo)
 	return false;
 }
 
-
-
-// **********************************
-// ********** Root Functions ********
-// **********************************
 
 void dae::GameObject::Initialize() const
 {
@@ -259,5 +270,75 @@ void dae::GameObject::RenderImGui() const
 
 	// update children
 	for (GameObject* pChild : m_pChildrenVec) pChild->RenderImGui();
+}
+
+void dae::GameObject::OnEnable() const
+{
+	for (auto& upComponent : m_upComponentVec) upComponent->OnEnable();
+}
+
+void dae::GameObject::OnDIsable() const
+{
+	for (auto& upComponent : m_upComponentVec) upComponent->OnDIsable();
+}
+
+void dae::GameObject::OnDestroy() const
+{
+	for (auto& upComponent : m_upComponentVec) upComponent->OnDestroy();
+
+	for (GameObject* pChild : m_pChildrenVec) pChild->OnDestroy();
+}
+
+void dae::GameObject::UpdateGameObjectState()
+{
+	if (m_MarkedForEnable != m_IsEnabled)
+	{
+		m_IsEnabled = m_MarkedForEnable;
+	}
+	(m_IsEnabled) ? OnEnable() : OnDIsable();
+
+
+	for (GameObject* pChild : m_pChildrenVec)
+	{
+		if (pChild->IsMarkedForDestroy())
+		{
+			pChild->OnDestroy();
+			delete pChild;
+			pChild = nullptr;
+		}
+	}
+	// move all elements you want to erase to the end
+	const auto beginEraseGameObjectItt = std::remove_if(m_pChildrenVec.begin(), m_pChildrenVec.end(),
+		[](GameObject* pObject) { return pObject->IsMarkedForDestroy(); });
+	// erase all those elements
+	m_pChildrenVec.erase(beginEraseGameObjectItt, m_pChildrenVec.end());
+	
+
+	for (const auto& pComponent : m_upComponentVec)
+	{
+		if (pComponent->IsMarkedForDestroy())
+		{
+			pComponent->OnDestroy();
+		}
+	}
+
+	// move all elements you want to erase to the end
+	const auto beginEraseComponentItt = std::remove_if(m_upComponentVec.begin(), m_upComponentVec.end(),
+		[](const auto& pComponent) { return pComponent->IsMarkedForDestroy(); });
+	// erase all those elements
+	m_upComponentVec.erase(beginEraseComponentItt, m_upComponentVec.end());
+
+
+
+
+	for (const auto& pComponent : m_upComponentVec)
+	{
+		pComponent->UpdateComponentState();
+	}
+	for (GameObject* pChild : m_pChildrenVec)
+	{
+		pChild->UpdateGameObjectState();
+	}
+
 }
 

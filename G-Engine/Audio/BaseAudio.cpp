@@ -119,7 +119,7 @@ public:
 			it = m_SoundMap.erase(it);
 		}
 		lock.unlock();
-		endThread.store(true);
+		m_IsQuitting.store(true);
 		// let the sound queue thread quit
 		m_SoundQueueCV.notify_all();
 		//Finish sound thread
@@ -156,17 +156,17 @@ public:
 		}
 		//m_SoundMap[nextFreeID] = new SoundEffect(path);
 		// add It to the path map but do not load it yet
-		m_IDMap[path] = nextFreeID;
+		m_IDMap[path] = m_NextFreeID;
 		// add an unloaded soundeffect to the map
-		m_SoundMap[nextFreeID] = new SDLAudio(path);
+		m_SoundMap[m_NextFreeID] = new SDLAudio(path);
 		// push it to the load queue
-		m_pLoadQueue.push(m_SoundMap[nextFreeID]);
+		m_pLoadQueue.push(m_SoundMap[m_NextFreeID]);
 		// set the new free ID
-		++nextFreeID;
+		++m_NextFreeID;
 
 		// notify the thread
 		m_SoundQueueCV.notify_all();
-		return nextFreeID - 1; // return the given Id
+		return m_NextFreeID - 1; // return the given Id
 	}
 
 	void SetVolume(int soundID, float fraction)
@@ -217,27 +217,24 @@ private:
 		while (true)
 		{
 			std::unique_lock<std::mutex> lock(m_SoundMutex);
-			std::cout << "sleep" << std::endl;
-			m_SoundQueueCV.wait(lock, [&]() { return !m_pLoadQueue.empty() || !m_pPlayQueue.empty() || endThread.load(); });
-			std::cout << "awake" << std::endl;
+			m_SoundQueueCV.wait(lock, [&]() 
+				{ 
+					return !m_pLoadQueue.empty() || !m_pPlayQueue.empty() || m_IsQuitting.load(); 
+				});
 
-			if (endThread.load())
+			if (m_IsQuitting.load())
 			{
 				lock.unlock();
 				break;
 			}
-
 			if (!m_pPlayQueue.empty())
 			{
 				// Get the first sound effect to play from the queue
 				PlayRequest soundRequest = m_pPlayQueue.front();
 				//Pop front
 				m_pPlayQueue.pop();
-
 				//Unlock the lock
 				lock.unlock();
-
-
 				// Be sure that the sound is loaded before you play
 				soundRequest._soundEffect->Load();
 				// play the sound
@@ -249,15 +246,11 @@ private:
 				SDLAudio* pSound = m_pLoadQueue.front();
 				// Pop front
 				m_pLoadQueue.pop();
-
 				//Unlock the lock
 				lock.unlock();
-
 				//Do stuff
 				pSound->Load();
 			}
-
-
 		}
 	}
 
@@ -274,7 +267,7 @@ private:
 		int _playChannel;
 	};
 
-	std::atomic<bool> endThread = false;
+	std::atomic<bool> m_IsQuitting = false;
 
 	using IDAudioMap = std::map<int, SDLAudio*>;
 	using PathIDMap = std::map<const std::string, int>;
@@ -290,7 +283,7 @@ private:
 	std::queue<SDLAudio*> m_pLoadQueue;
 
 
-	int nextFreeID;
+	int m_NextFreeID;
 };
 
 
@@ -303,6 +296,7 @@ void BaseAudio::PlaySound(int soundID, int channel)
 {
 	m_pImpl->PlaySoundEffect(soundID, channel);
 }
+
 
 int BaseAudio::LoadSound(const std::string& path)
 {
