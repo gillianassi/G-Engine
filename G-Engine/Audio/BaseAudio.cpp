@@ -111,14 +111,15 @@ public:
 	{
 
 		// Lock to access the map
-		std::lock_guard<std::mutex> lockGuard(m_SoundMutex);
+		std::unique_lock<std::mutex> lock(m_SoundMutex);
 		for (IDAudioMap::iterator it = m_SoundMap.begin(); it != m_SoundMap.end();)
 		{
 			delete (*it).second;
 			(*it).second = nullptr;
 			it = m_SoundMap.erase(it);
 		}
-		endThread = true;
+		lock.unlock();
+		endThread.store(true);
 		// let the sound queue thread quit
 		m_SoundQueueCV.notify_all();
 		//Finish sound thread
@@ -215,31 +216,34 @@ private:
 	{
 		while (true)
 		{
-			// prioritize playing sounds
-			do
-			{
-				if (!m_pPlayQueue.empty())
-				{
-					std::unique_lock<std::mutex> playLock(m_SoundMutex);
-					// Get the first sound effect to play from the queue
-					PlayRequest soundRequest = m_pPlayQueue.front();
-					//Pop front
-					m_pPlayQueue.pop();
-
-					//Unlock the lock
-					playLock.unlock();
-
-
-					// Be sure that the sound is loaded before you play
-					soundRequest._soundEffect->Load();
-					// play the sound
-					soundRequest._soundEffect->PlaySoundEffect(0, soundRequest._playChannel);
-				}
-
-			} while (!m_pPlayQueue.empty());
-
 			std::unique_lock<std::mutex> lock(m_SoundMutex);
-			if (!m_pLoadQueue.empty())
+			std::cout << "sleep" << std::endl;
+			m_SoundQueueCV.wait(lock, [&]() { return !m_pLoadQueue.empty() || !m_pPlayQueue.empty() || endThread.load(); });
+			std::cout << "awake" << std::endl;
+
+			if (endThread.load())
+			{
+				lock.unlock();
+				break;
+			}
+
+			if (!m_pPlayQueue.empty())
+			{
+				// Get the first sound effect to play from the queue
+				PlayRequest soundRequest = m_pPlayQueue.front();
+				//Pop front
+				m_pPlayQueue.pop();
+
+				//Unlock the lock
+				lock.unlock();
+
+
+				// Be sure that the sound is loaded before you play
+				soundRequest._soundEffect->Load();
+				// play the sound
+				soundRequest._soundEffect->PlaySoundEffect(0, soundRequest._playChannel);
+			}
+			else if (!m_pLoadQueue.empty())
 			{
 				// Get the first sound effect to load from the queue
 				SDLAudio* pSound = m_pLoadQueue.front();
@@ -253,11 +257,7 @@ private:
 				pSound->Load();
 			}
 
-			// if both the load queue and play queue are empty after this, wait for a new notify
-			if (!m_pLoadQueue.empty() && !m_pPlayQueue.empty())
-			{
-				m_SoundQueueCV.wait(lock);
-			}
+
 		}
 	}
 
@@ -274,7 +274,7 @@ private:
 		int _playChannel;
 	};
 
-	bool endThread = false;
+	std::atomic<bool> endThread = false;
 
 	using IDAudioMap = std::map<int, SDLAudio*>;
 	using PathIDMap = std::map<const std::string, int>;
