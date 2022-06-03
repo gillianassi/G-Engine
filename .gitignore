@@ -396,3 +396,12 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Keep entire 3rdParty folder
+!3rdParty/**/x64
+!3rdParty/**/x86
+!3rdParty/**/Win32
+!3rdParty/**/[Dd]ebug/
+!3rdParty/**/[Dd]ebugPublic/
+!3rdParty/**/[Rr]elease/
+!3rdParty/**/[Rr]eleases/
