@@ -12,7 +12,7 @@
 
 PlayerDieCommand::PlayerDieCommand(dae::GameObject* pPlayer) :
 	Command(),
-	m_pPlayer{ pPlayer->GetComponent<PeterPepperComponent>() }
+	m_pPlayer{ pPlayer->GetComponentOfType<PeterPepperComponent>() }
 {
 }
 
@@ -24,7 +24,7 @@ void PlayerDieCommand::KillPlayer()
 
 EnemyKillCommand::EnemyKillCommand(dae::GameObject* pEnemy) :
 	Command(),
-	m_pEnemy{ pEnemy->GetComponent<EnemyComponent>() }
+	m_pEnemy{ pEnemy->GetComponentOfType<EnemyComponent>() }
 {
 }
 
@@ -35,7 +35,7 @@ void EnemyKillCommand::KillEnemy()
 
 ReviveEnemyCommand::ReviveEnemyCommand(dae::GameObject* pEnemy) :
 	Command(),
-	m_pEnemy{ pEnemy->GetComponent<EnemyComponent>() }
+	m_pEnemy{ pEnemy->GetComponentOfType<EnemyComponent>() }
 {
 }
 
@@ -46,7 +46,7 @@ void ReviveEnemyCommand::ReviveEnemy()
 
 BurgerDropCommand::BurgerDropCommand(dae::GameObject* pBurger) :
 	Command(),
-	m_pBurger{ pBurger->GetComponent<BurgerComponent>() }
+	m_pBurger{ pBurger->GetComponentOfType<BurgerComponent>() }
 {
 }
 
@@ -57,7 +57,7 @@ void BurgerDropCommand::DropBurger()
 
 ResetBurgerCommand::ResetBurgerCommand(dae::GameObject* pBurger) :
 	Command(),
-	m_pBurger{ pBurger->GetComponent<BurgerComponent>() }
+	m_pBurger{ pBurger->GetComponentOfType<BurgerComponent>() }
 {
 }
 

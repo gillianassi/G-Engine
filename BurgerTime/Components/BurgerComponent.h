@@ -12,7 +12,7 @@ public:
 	BurgerComponent& operator=(const BurgerComponent& other) = delete;
 	BurgerComponent& operator=(BurgerComponent&& other) = delete;
 
-
+	virtual void Initialize() override {}
 	virtual void Update() override;
 	virtual void FixedUpdate() override;
 

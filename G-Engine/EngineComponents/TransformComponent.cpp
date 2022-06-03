@@ -21,9 +21,9 @@ glm::vec3 dae::TransformComponent::GetPosition()
 	glm::vec3 position = m_Transform.GetPosition();
 	if (m_pOwner->GetParent() != nullptr)
 	{
-		if (m_pOwner->GetParent()->GetComponent<TransformComponent>())
+		if (m_pOwner->GetParent()->GetComponentOfType<TransformComponent>())
 		{
-			position += m_pOwner->GetParent()->GetComponent<TransformComponent>()->GetPosition();
+			position += m_pOwner->GetParent()->GetComponentOfType<TransformComponent>()->GetPosition();
 		}
 	}
 	return position;

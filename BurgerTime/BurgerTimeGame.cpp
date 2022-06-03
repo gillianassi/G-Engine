@@ -57,37 +57,37 @@ void BurgerTimeGame::LoadGame() const
 	// ToDo: add TetComponent in constructor of fpsComponent
 	auto go = std::make_shared<GameObject>();
 	go->AddComponent<RenderComponent>();
-	go->GetComponent<RenderComponent>()->SetTexture("background.jpg");
+	go->GetComponentOfType<RenderComponent>()->SetTexture("background.jpg");
 	go->AddComponent<TransformComponent>();
-	go->GetComponent<TransformComponent>()->SetPosition(0, 0);
+	go->GetComponentOfType<TransformComponent>()->SetPosition(0, 0);
 	scene.Add(go);
 
 
 	go = std::make_shared<GameObject>();
 	go->AddComponent<RenderComponent>();
-	go->GetComponent<RenderComponent>()->SetTexture("logo.png");
+	go->GetComponentOfType<RenderComponent>()->SetTexture("logo.png");
 	go->AddComponent<TransformComponent>();
-	go->GetComponent<TransformComponent>()->SetPosition(216, 180);
+	go->GetComponentOfType<TransformComponent>()->SetPosition(216, 180);
 	scene.Add(go);
 
 	go = std::make_shared<GameObject>();
 	go->AddComponent<RenderComponent>();
 	go->AddComponent<TransformComponent>();
-	go->GetComponent<TransformComponent>()->SetPosition(80, 20);
+	go->GetComponentOfType<TransformComponent>()->SetPosition(80, 20);
 	go->AddComponent<TextComponent>();
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	go->GetComponent<TextComponent>()->SetFont(font);
-	go->GetComponent<TextComponent>()->SetText("Programming 4 Assignment");
+	go->GetComponentOfType<TextComponent>()->SetFont(font);
+	go->GetComponentOfType<TextComponent>()->SetText("Programming 4 Assignment");
 	scene.Add(go);
 
 	go = std::make_shared<GameObject>();
 	go->AddComponent<RenderComponent>();
 	go->AddComponent<TransformComponent>();
-	go->GetComponent<TransformComponent>()->SetPosition(10, 10);
+	go->GetComponentOfType<TransformComponent>()->SetPosition(10, 10);
 	go->AddComponent<TextComponent>();
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	go->GetComponent<TextComponent>()->SetFont(font);
-	go->GetComponent<TextComponent>()->SetText("XX FPS");
+	go->GetComponentOfType<TextComponent>()->SetFont(font);
+	go->GetComponentOfType<TextComponent>()->SetText("XX FPS");
 	go->AddComponent<FPSComponent>();
 
 	scene.Add(go);

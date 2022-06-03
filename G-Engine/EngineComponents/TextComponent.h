@@ -17,6 +17,7 @@ namespace dae
 		TextComponent& operator=(const TextComponent& other) = delete;
 		TextComponent& operator=(TextComponent&& other) = delete;
 
+		virtual void Initialize() override {}
 		virtual void Update() override;
 		virtual void FixedUpdate() override;
 

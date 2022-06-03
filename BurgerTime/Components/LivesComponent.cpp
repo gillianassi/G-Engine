@@ -15,7 +15,7 @@ void LivesComponent::Update()
 {
 	if (m_UpdateTextComponent)
 	{
-		if (auto textComponent = m_pOwner->GetComponent<dae::TextComponent>())
+		if (auto textComponent = m_pOwner->GetComponentOfType<dae::TextComponent>())
 		{
 			textComponent->SetText("Lives: " + std::to_string(m_NrOfLives));
 		}

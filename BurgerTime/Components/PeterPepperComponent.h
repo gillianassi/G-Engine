@@ -12,6 +12,7 @@ public:
 	PeterPepperComponent& operator=(const PeterPepperComponent& other) = delete;
 	PeterPepperComponent& operator=(PeterPepperComponent&& other) = delete;
 
+	virtual void Initialize() override {}
 	virtual void Update() override;
 	virtual void FixedUpdate() override;
 	void Die();

@@ -17,7 +17,7 @@ void dae::FPSComponent::Update()
 	m_ElapsedFrameTime += Time::deltaTime;
 	if (m_ElapsedFrameTime > 1.f)
 	{
-		m_pOwner->GetComponent<TextComponent>()->SetText(std::to_string(m_FrameCounter) + " FPS");
+		m_pOwner->GetComponentOfType<TextComponent>()->SetText(std::to_string(m_FrameCounter) + " FPS");
 		m_FrameCounter = 0;
 		m_ElapsedFrameTime -= 1.f;
 	}

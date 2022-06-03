@@ -37,9 +37,9 @@ void Scene::Render() const
 {
 	for (const auto& object : m_Objects)
 	{
-		if (object->GetComponent<RenderComponent>())
+		if (object->GetComponentOfType<RenderComponent>())
 		{
-			auto renderComponent = object->GetComponent<RenderComponent>();
+			auto renderComponent = object->GetComponentOfType<RenderComponent>();
 			renderComponent->Render();
 			renderComponent->RenderImGui();
 		}

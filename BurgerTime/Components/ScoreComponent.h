@@ -13,6 +13,7 @@ public:
 	ScoreComponent& operator=(const ScoreComponent& other) = delete;
 	ScoreComponent& operator=(ScoreComponent&& other) = delete;
 
+	virtual void Initialize() override {}
 	virtual void Update() override;
 	virtual void FixedUpdate() override;
 

@@ -12,7 +12,7 @@ public:
 	EnemyComponent& operator=(const EnemyComponent& other) = delete;
 	EnemyComponent& operator=(EnemyComponent&& other) = delete;
 
-
+	virtual void Initialize() override {}
 	virtual void Update() override;
 	virtual void FixedUpdate() override;
 

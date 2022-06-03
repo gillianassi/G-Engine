@@ -11,7 +11,7 @@ public:
 	AchievementComponent& operator=(const AchievementComponent& other) = delete;
 	AchievementComponent& operator=(AchievementComponent&& other) = delete;
 
-
+	virtual void Initialize() override {}
 	virtual void Update() override;
 	virtual void FixedUpdate() override;
 

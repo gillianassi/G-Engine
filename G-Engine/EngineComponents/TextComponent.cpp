@@ -34,7 +34,7 @@ void dae::TextComponent::Update()
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 		}
 		SDL_FreeSurface(surf);
-		m_pOwner->GetComponent<RenderComponent>()->SetTexture(std::make_shared<Texture2D>(texture));
+		m_pOwner->GetComponentOfType<RenderComponent>()->SetTexture(std::make_shared<Texture2D>(texture));
 		m_NeedsUpdate = false;
 	}
 }

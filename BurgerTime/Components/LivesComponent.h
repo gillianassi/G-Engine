@@ -11,6 +11,7 @@ public:
 	LivesComponent& operator=(const LivesComponent& other) = delete;
 	LivesComponent& operator=(LivesComponent&& other) = delete;
 
+	virtual void Initialize() override {}
 	virtual void Update() override;
 	virtual void FixedUpdate() override;
 

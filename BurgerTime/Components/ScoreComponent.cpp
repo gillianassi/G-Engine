@@ -15,7 +15,7 @@ void ScoreComponent::Update()
 {
 	if (m_UpdateTextComponent)
 	{
-		if (auto textComponent = m_pOwner->GetComponent<dae::TextComponent>())
+		if (auto textComponent = m_pOwner->GetComponentOfType<dae::TextComponent>())
 		{
 			textComponent->SetText("Score: " + std::to_string(m_Score));
 		}
