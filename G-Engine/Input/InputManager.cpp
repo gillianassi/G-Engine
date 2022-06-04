@@ -61,8 +61,6 @@ bool dae::InputManager::ProcessInput()
 	{
 		m_pControllers[controllerIndex]->ProcessInput();
 
-		if (!m_pControllers[controllerIndex]->IsConnected()) continue;
-
 		// Handle both controller and keyboard
 		HandleInput((unsigned int)controllerIndex);
 	}

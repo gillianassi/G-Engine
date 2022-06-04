@@ -294,13 +294,14 @@ void dae::GameObject::OnDestroy() const
 
 void dae::GameObject::UpdateGameObjectState()
 {
+	// Update the enabled state
 	if (m_MarkedForEnable != m_IsEnabled)
 	{
 		m_IsEnabled = m_MarkedForEnable;
 	}
 	(m_IsEnabled) ? OnEnable() : OnDIsable();
 
-
+	// Destroy gameObjects
 	for (GameObject* pChild : m_pChildrenVec)
 	{
 		if (pChild->IsMarkedForDestroy())
@@ -316,7 +317,7 @@ void dae::GameObject::UpdateGameObjectState()
 	// erase all those elements
 	m_pChildrenVec.erase(beginEraseGameObjectItt, m_pChildrenVec.end());
 	
-
+	// Destroy components
 	for (const auto& pComponent : m_upComponentVec)
 	{
 		if (pComponent->IsMarkedForDestroy())
@@ -332,7 +333,7 @@ void dae::GameObject::UpdateGameObjectState()
 	m_upComponentVec.erase(beginEraseComponentItt, m_upComponentVec.end());
 
 
-
+	// Propagate update to the remaining ones
 
 	for (const auto& pComponent : m_upComponentVec)
 	{

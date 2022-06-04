@@ -14,6 +14,8 @@
 #include "Audio/BaseAudio.h"
 #include "ResourceManagement/Locator.h"
 
+#include "b2_world.h"
+
 
 using namespace std;
 

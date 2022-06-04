@@ -94,7 +94,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GEnginePCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(SolutionDir)3rdParty\Box2D\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -112,8 +112,8 @@
 echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\VLD\lib\Win32;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\Box2D\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\3rdParty\VLD\lib\Win32;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,7 +126,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GEnginePCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(SolutionDir)3rdParty\Box2D\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -145,8 +145,8 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
 echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\VLD\lib\Win32;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\Box2D\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\3rdParty\VLD\lib\Win32;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,7 +157,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GEnginePCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(SolutionDir)3rdParty\Box2D\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -175,8 +175,8 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
 echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\VLD\lib\Win64;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\Box2D\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\3rdParty\VLD\lib\Win64;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -189,7 +189,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GEnginePCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;$(SolutionDir)3rdParty\steamworks\public\steam;$(SolutionDir)3rdParty\ImGui;$(SolutionDir)3rdParty\Box2D\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -208,8 +208,8 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
 echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\VLD\lib\Win64;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\3rdParty\Box2D\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\3rdParty\VLD\lib\Win64;%(AdditionalLibraryDirectories);$(SolutionDir)\3rdParty\steamworks\redistributable_bin</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
