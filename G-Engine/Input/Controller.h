@@ -32,9 +32,9 @@ namespace dae
 		// Update the input
 		// wrapper functions
 		void ProcessInput();
-		bool IsPressed(const ControllerButton& button) const;
+		bool IsHoldingDown(const ControllerButton& button) const;
 		bool IsDownThisFrame(const ControllerButton& button) const;
-		bool IsUpThisFrame(const ControllerButton& button) const;
+		bool IsReleasedThisFrame(const ControllerButton& button) const;
 
 		// Own functions
 		bool IsConnected() const;

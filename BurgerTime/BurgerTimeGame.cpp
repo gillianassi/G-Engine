@@ -169,21 +169,21 @@ void BurgerTimeGame::LoadGame() const
 	std::cout << "\t\t[X] - Burger drops\t\t- Shared" << std::endl;
 	// Instantiate Controls:
 	//p1
-	InputManager::GetInstance().AddButtonCommand<PlayerDieCommand>
-		(ControllerButton::ButtonA, ActivationState::BTN_DOWN, 0, peterPepper1);
-	InputManager::GetInstance().AddButtonCommand<EnemyKillCommand>
-		(ControllerButton::ButtonB, ActivationState::BTN_DOWN, 0, enemy1);
-	InputManager::GetInstance().AddButtonCommand<ReviveEnemyCommand>
-		(ControllerButton::ButtonY, ActivationState::BTN_DOWN, 0, enemy1);
+	InputManager::GetInstance().AddInputCommand<PlayerDieCommand>
+		(SDL_SCANCODE_RIGHT, ControllerButton::ButtonA, ActivationState::BTN_HOLD, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<EnemyKillCommand>
+		(ControllerButton::ButtonB, ActivationState::BTN_DOWN,enemy1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<ReviveEnemyCommand>
+		(ControllerButton::ButtonY, ActivationState::BTN_DOWN,enemy1, InputManager::PlayerIndex::P1);
 	//p2
-	InputManager::GetInstance().AddButtonCommand<PlayerDieCommand>
-		(ControllerButton::ButtonA, ActivationState::BTN_DOWN, 1, peterPepper2);
-	InputManager::GetInstance().AddButtonCommand<EnemyKillCommand>
-		(ControllerButton::ButtonB, ActivationState::BTN_DOWN, 1, enemy2);
-	InputManager::GetInstance().AddButtonCommand<ReviveEnemyCommand>
-		(ControllerButton::ButtonY, ActivationState::BTN_DOWN, 1, enemy2);
+	InputManager::GetInstance().AddInputCommand<PlayerDieCommand>
+		(ControllerButton::ButtonA, ActivationState::BTN_HOLD,peterPepper2, InputManager::PlayerIndex::P2);
+	InputManager::GetInstance().AddInputCommand<EnemyKillCommand>
+		(ControllerButton::ButtonB, ActivationState::BTN_DOWN,enemy2, InputManager::PlayerIndex::P2);
+	InputManager::GetInstance().AddInputCommand<ReviveEnemyCommand>
+		(ControllerButton::ButtonY, ActivationState::BTN_DOWN,enemy2, InputManager::PlayerIndex::P2);
 	//Shared
-	InputManager::GetInstance().AddButtonCommand<BurgerDropCommand>
-		(ControllerButton::ButtonX, ActivationState::BTN_DOWN, burger);
+	InputManager::GetInstance().AddInputCommand<BurgerDropCommand>
+		(ControllerButton::ButtonX, ActivationState::BTN_DOWN, burger, InputManager::PlayerIndex::ALL);
 
 }

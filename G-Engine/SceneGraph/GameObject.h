@@ -31,8 +31,8 @@ namespace dae
 			GetComponentOfType() const;
 
 		template <typename TypeToGet>
-		std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*>
-			GetAllComponentsOfType() const;
+		std::vector<std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*>>
+			 GetAllComponentsOfType() const;
 
 		TransformComponent* GetTransform() const { return m_pTransform; }
 		
@@ -117,21 +117,21 @@ namespace dae
 	{
 		for (const auto& c: m_upComponentVec)
 		{
-			if (dynamic_cast<TypeToGet*>(c.get()))
-				return dynamic_cast<TypeToGet*>(c.get());
+			if (TypeToGet* pComponent = dynamic_cast<TypeToGet*>(c.get()))
+				return pComponent;
 		}
 		return nullptr;
 	}
 
 	template<typename TypeToGet>
-	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*> 
-		GameObject::GetAllComponentsOfType() const
+	inline std::vector<std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*>>
+		 GameObject::GetAllComponentsOfType() const
 	{
 		std::vector<TypeToGet*> componentsVec{};
 		for (const auto& c: m_upComponentVec)
 		{
-			if (dynamic_cast<TypeToGet*>(c.get()))
-				componentsVec.push_back(dynamic_cast<TypeToGet*>(c.get()));
+			if (TypeToGet* pComponent = dynamic_cast<TypeToGet*>(c.get()))
+				componentsVec.emplace_back(pComponent);
 		}
 		return componentsVec;
 	}

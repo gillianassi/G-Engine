@@ -12,7 +12,7 @@ using namespace dae;
 dae::InputManager::InputManager():
 	m_NrOfControllers{4}
 {
-	m_ControllerCommandMaps = std::vector<ControllerCommandsMap>(m_NrOfControllers);
+	m_ActionCommandMaps = std::vector<ActionCommandsMap>(m_NrOfControllers);
 	for (int i = 0; i < m_NrOfControllers; i++)
 	{
 		m_pControllers.emplace_back(std::move(std::make_unique<Controller>(i)));
@@ -22,29 +22,49 @@ dae::InputManager::InputManager():
 
 bool dae::InputManager::ProcessInput()
 { 
+	// reset all key states
+	for (auto& [key, state] : m_KeyStatesMap)
+	{
+		state.isDownThisFrame = false;
+		state.isReleasedThisFrame = false;
+	}
+
+	// Process Keyboard
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) 
+	{
+		if (e.type == SDL_QUIT) {
+			return false;
+		}
+
+		char key = (char)e.key.keysym.sym;
+
+		if (e.type == SDL_KEYDOWN)
+		{
+			m_KeyStatesMap[key] = KeyState{true, true, false};
+		}
+		if (e.type == SDL_KEYUP)
+		{
+			m_KeyStatesMap[key] = KeyState{ false, false, true };
+		}
+		
+		if (e.type == SDL_MOUSEBUTTONDOWN) 
+		{
+		}
+
+
+		ImGui_ImplSDL2_ProcessEvent(&e);
+
+	}
+	// Process Controllers
 	for (size_t controllerIndex = 0; controllerIndex < m_pControllers.size(); controllerIndex++)
 	{
 		m_pControllers[controllerIndex]->ProcessInput();
 
 		if (!m_pControllers[controllerIndex]->IsConnected()) continue;
 
+		// Handle both controller and keyboard
 		HandleInput((unsigned int)controllerIndex);
-	}
-
-	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
-		if (e.type == SDL_QUIT) {
-			return false;
-		}
-		if (e.type == SDL_KEYDOWN) {
-
-		}
-		if (e.type == SDL_MOUSEBUTTONDOWN) {
-
-		}
-
-		ImGui_ImplSDL2_ProcessEvent(&e);
-
 	}
 	return true;
 }
@@ -53,18 +73,18 @@ bool dae::InputManager::ProcessInput()
 
 void dae::InputManager::HandleInput(unsigned int controllerIdx)
 {
-	for (const auto& [buttonAction, command] : m_ControllerCommandMaps[controllerIdx])
+	for (const auto& [buttonAction, command] : m_ActionCommandMaps[controllerIdx])
 	{
 		switch (buttonAction.behaviour)
 		{
 		case InputManager::ActivationState::BTN_DOWN:
-			HandleBtnDown(buttonAction.button, command.get(), controllerIdx);
+			HandleBtnDown(buttonAction, command.get(), controllerIdx);
 			break;
 		case InputManager::ActivationState::BTN_UP:
-			HandleBtnUp(buttonAction.button, command.get(), controllerIdx);
+			HandleBtnUp(buttonAction, command.get(), controllerIdx);
 			break;
 		case InputManager::ActivationState::BTN_HOLD:
-			HandleBtnHold(buttonAction.button, command.get(), controllerIdx);
+			HandleBtnHold(buttonAction, command.get(), controllerIdx);
 			break;
 		default:
 			break;
@@ -72,25 +92,30 @@ void dae::InputManager::HandleInput(unsigned int controllerIdx)
 	}
 }
 
-void dae::InputManager::HandleBtnDown(ControllerButton button, Command* command, unsigned int controllerIdx)
+void dae::InputManager::HandleBtnDown(InputAction inputAction, Command* command, unsigned int controllerIdx)
 {
-	if (m_pControllers[controllerIdx].get()->IsUpThisFrame(button))
+	
+	// if the controller is up, or
+	if (m_pControllers[controllerIdx].get()->IsDownThisFrame(inputAction.button) || 
+		m_KeyStatesMap[inputAction.sdlKey].isDownThisFrame)
 	{
 		command->Execute();
 	}
 }
 
-void dae::InputManager::HandleBtnUp(ControllerButton button, Command* command, unsigned int controllerIdx)
+void dae::InputManager::HandleBtnUp(InputAction inputAction, Command* command, unsigned int controllerIdx)
 {
-	if (m_pControllers[controllerIdx].get()->IsUpThisFrame(button))
+	if (m_pControllers[controllerIdx].get()->IsReleasedThisFrame(inputAction.button) ||
+		m_KeyStatesMap[inputAction.sdlKey].isReleasedThisFrame)
 	{
 		command->Execute();
 	}
 }
 
-void dae::InputManager::HandleBtnHold(ControllerButton button, Command* command, unsigned int controllerIdx)
+void dae::InputManager::HandleBtnHold(InputAction inputAction, Command* command, unsigned int controllerIdx)
 {
-	if (m_pControllers[controllerIdx].get()->IsPressed(button))
+	if (m_pControllers[controllerIdx].get()->IsHoldingDown(inputAction.button) ||
+		m_KeyStatesMap[inputAction.sdlKey].isHoldingDown)
 	{
 		command->Execute();
 	}

@@ -88,7 +88,7 @@ void dae::Controller::ProcessInput()
 	m_pControllerImpl->Update();
 }
 
-bool dae::Controller::IsPressed(const ControllerButton& button) const
+bool dae::Controller::IsHoldingDown(const ControllerButton& button) const
 {
 	return (m_pControllerImpl->IsPressed(static_cast<unsigned int>(button)));
 }
@@ -98,7 +98,7 @@ bool dae::Controller::IsDownThisFrame(const ControllerButton& button) const
 	return (m_pControllerImpl->IsDownThisFrame(static_cast<unsigned int>(button)));
 }
 
-bool dae::Controller::IsUpThisFrame(const ControllerButton& button) const
+bool dae::Controller::IsReleasedThisFrame(const ControllerButton& button) const
 {
 	return (m_pControllerImpl->IsUpThisFrame(static_cast<unsigned int>(button)));
 }

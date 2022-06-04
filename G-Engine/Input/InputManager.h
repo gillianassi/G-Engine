@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 #include "Command.h"
 #include "Controller.h"
@@ -16,11 +17,33 @@ namespace dae
 	{
 	public:
 
+		enum class PlayerIndex
+		{
+			P1 = 0,
+			P2 = 1,
+			P3 = 2,
+			P4 = 3,
+			ALL = 4
+		};
+
 		enum class ActivationState
 		{
 			BTN_DOWN,
 			BTN_UP,
 			BTN_HOLD
+		};
+
+		struct KeyState
+		{
+			KeyState(bool isDown = false, bool isPressed = false, bool isReleased = false)
+				: isHoldingDown{ isDown }
+				, isDownThisFrame{ isPressed }
+				, isReleasedThisFrame{ isReleased }
+			{
+			}
+			bool isHoldingDown = false;
+			bool isDownThisFrame = false;
+			bool isReleasedThisFrame = false;
 		};
 
 		explicit InputManager();
@@ -35,73 +58,90 @@ namespace dae
 		bool ProcessInput();
 
 		template<class myCommand>
-		void AddButtonCommand(const ControllerButton& button, const ActivationState& state, GameObject* gameObject);
+		void AddInputCommand(char sdlInput, const ControllerButton& button, const ActivationState& state, GameObject* gameObject, PlayerIndex playerIndex = PlayerIndex::P1);
+		
 		template<class myCommand>
-		void AddButtonCommand(const ControllerButton& button, const ActivationState& state, unsigned int controllerIdx, GameObject* gameObject);
-
-
-		// TODO multiple controllers
-
-		// TODO hide all internals
-
-		// while using multiple controllers, make sure\
-		// that even when disconecting, your state gets updated
+		void AddInputCommand(const ControllerButton& button, const ActivationState& state, GameObject* gameObject, PlayerIndex playerIndex = PlayerIndex::P1);
+		
+		template<class myCommand>
+		void AddInputCommand(char sdlInput, const ActivationState& state, GameObject* gameObject, PlayerIndex playerIndex = PlayerIndex::P1);
 
 	private:
-		struct ButtonAction
+		struct InputAction
 		{
+			char sdlKey;
 			ControllerButton button;
 			ActivationState behaviour;
 
-			ButtonAction(ControllerButton _button, ActivationState _behaviour) :
+			InputAction(char _sdlKey, ControllerButton _button, ActivationState _behaviour) :
+				sdlKey{ _sdlKey },
 				button{ _button },
 				behaviour{ _behaviour }
 			{}
 
-			bool operator<(const ButtonAction& rhs) const
+			bool operator<(const InputAction& rhs) const
 			{
 				return button < rhs.button;
 			}
 		};
-		using ControllerCommandsPair = std::pair<ButtonAction, std::unique_ptr<Command>>;
-		using ControllerCommandsMap = std::map<ButtonAction, std::unique_ptr<Command>>;
+		using ControllerCommandsPair = std::pair<InputAction, std::unique_ptr<Command>>;
+		using ActionCommandsMap = std::map<InputAction, std::unique_ptr<Command>>;
+		using KeyStatePair = std::pair<char, KeyState>;
+		using KeyStateMap = std::unordered_map<char, KeyState>;
 
 
 
 
 
 		void HandleInput(unsigned int controllerIdx);
-		void HandleBtnDown(ControllerButton button, Command* command, unsigned int controllerIdx);
-		void HandleBtnUp(ControllerButton button, Command* command, unsigned int controllerIdx);
-		void HandleBtnHold(ControllerButton button, Command* command, unsigned int controllerIdx);
+		void HandleBtnDown(InputAction input, Command* command, unsigned int controllerIdx);
+		void HandleBtnUp(InputAction input, Command* command, unsigned int controllerIdx);
+		void HandleBtnHold(InputAction input, Command* command, unsigned int controllerIdx);
 
 
 		// variables
 		
 
 		int m_NrOfControllers;
-		std::vector<ControllerCommandsMap> m_ControllerCommandMaps;
+		std::vector<ActionCommandsMap> m_ActionCommandMaps;
+		KeyStateMap m_KeyStatesMap;
 		std::vector<std::unique_ptr<Controller>> m_pControllers;
 	};
 
 
 	template<class myCommand>
-	inline void InputManager::AddButtonCommand(const ControllerButton& button, const ActivationState& state, GameObject* gameObject)
+	inline void InputManager::AddInputCommand(char sdlInput, const ControllerButton& button, const ActivationState& state, GameObject* gameObject, PlayerIndex playerIndex)
 	{
-		for (size_t i = 0; i < m_ControllerCommandMaps.size(); i++)
+		InputAction inputAction = InputAction(sdlInput, button, state);
+		if (int(playerIndex) < m_NrOfControllers)
 		{
-			m_ControllerCommandMaps[i].insert(ControllerCommandsPair(ButtonAction(button, state), std::make_unique<myCommand>(gameObject)));
+			m_ActionCommandMaps[int(playerIndex)].insert(ControllerCommandsPair(inputAction, std::make_unique<myCommand>(gameObject)));
 
+		}
+		else
+		{
+			for (size_t i = 0; i < m_ActionCommandMaps.size(); i++)
+			{
+				m_ActionCommandMaps[i].insert(ControllerCommandsPair(inputAction, std::make_unique<myCommand>(gameObject)));
+			}
+		}
+
+		if (sdlInput != NULL)
+		{
+			// insert all keys to a map to easilly find
+			m_KeyStatesMap.insert(KeyStatePair(sdlInput, KeyState()));
 		}
 	}
 
 	template<class myCommand>
-	inline void InputManager::AddButtonCommand(const ControllerButton& button, const ActivationState& state, unsigned int controllerIdx, GameObject* gameObject)
+	inline void InputManager::AddInputCommand(const ControllerButton& button, const ActivationState& state, GameObject* gameObject, PlayerIndex playerIndex)
 	{
-		if (controllerIdx < m_ControllerCommandMaps.size())
-		{
-			m_ControllerCommandMaps[controllerIdx].insert(ControllerCommandsPair(ButtonAction(button, state), std::make_unique<myCommand>(gameObject)));
-		}
+		AddInputCommand<myCommand>(NULL, button, state, gameObject, playerIndex);
 	}
 
+	template<class myCommand>
+	inline void InputManager::AddInputCommand(char sdlInput, const ActivationState& state, GameObject* gameObject, PlayerIndex playerIndex)
+	{
+		AddInputCommand<myCommand>(sdlInput, NULL, state, gameObject, playerIndex);
+	}
 }
