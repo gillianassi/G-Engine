@@ -16,20 +16,25 @@ void dae::TransformComponent::FixedUpdate()
 {
 }
 
-glm::vec3 dae::TransformComponent::GetPosition()
+glm::vec2 dae::TransformComponent::GetPosition()
 {
-	glm::vec3 position = m_Transform.GetPosition();
+	return m_Position;
+}
+
+glm::vec2 dae::TransformComponent::GetWorldPosition()
+{
+	glm::vec2 pos = m_Position;
 	if (m_pOwner->GetParent() != nullptr)
 	{
 		if (m_pOwner->GetParent()->GetComponentOfType<TransformComponent>())
 		{
-			position += m_pOwner->GetParent()->GetComponentOfType<TransformComponent>()->GetPosition();
+			pos += m_pOwner->GetParent()->GetComponentOfType<TransformComponent>()->GetPosition();
 		}
 	}
-	return position;
+	return pos;
 }
 
 void dae::TransformComponent::SetPosition(float x, float y)
 {
-	m_Transform.SetPosition(x, y, 0.0f);
+	m_Position = glm::vec2(x, y);
 }

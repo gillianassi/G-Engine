@@ -77,6 +77,8 @@ void BurgerTimeGame::LoadGame() const
 	go = title->AddChild("fpsCounter");
 	go->AddComponent<RenderComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(20, 50);
+	auto pos = go->GetComponentOfType<TransformComponent>()->GetPosition();
+	std::cout << "pos: " << pos.x << ", " << pos.y << std::endl;
 	go->AddComponent<TextComponent>();
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	go->GetComponentOfType<TextComponent>()->SetFont(font);

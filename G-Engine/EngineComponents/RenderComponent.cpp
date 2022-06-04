@@ -26,7 +26,7 @@ void dae::RenderComponent::Render()
 {
 	if (m_spTexture)
 	{
-		const auto& pos = m_pOwner->GetComponentOfType<TransformComponent>()->GetPosition();
+		const auto& pos = m_pOwner->GetComponentOfType<TransformComponent>()->GetWorldPosition();
 		Renderer::GetInstance().RenderTexture(*m_spTexture, pos.x, pos.y);
 	}
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseComponent.h"
-#include "Transform.h"
 
 namespace dae
 {
@@ -21,11 +20,15 @@ namespace dae
 		virtual void FixedUpdate() override;
 
 
-		glm::vec3 GetPosition();
+		glm::vec2 GetPosition();
+		glm::vec2 GetWorldPosition();
 		void SetPosition(float x, float y);
 
 	private:
-		dae::Transform m_Transform;
+
+		glm::vec2 m_Position{};
+		glm::vec2 m_Scale{};
+		float m_Rotation{};
 
 	};
 }
