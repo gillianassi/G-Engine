@@ -60,22 +60,14 @@ void Scene::Render() const
 {
 	for (GameObject* object : m_Objects)
 	{
-		if (object->GetComponentOfType<RenderComponent>())
-		{
-			auto renderComponent = object->GetComponentOfType<RenderComponent>();
-			renderComponent->Render();
-		}
+		object->Render();
 	}
 }
 void Scene::RenderImGui()
 {
 	for (GameObject* object : m_Objects)
 	{
-		if (object->GetComponentOfType<RenderComponent>())
-		{
-			auto renderComponent = object->GetComponentOfType<RenderComponent>();
-			renderComponent->RenderImGui();
-		}
+		object->RenderImGui();
 	}
 }
 

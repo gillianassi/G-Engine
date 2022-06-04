@@ -58,30 +58,25 @@ void BurgerTimeGame::LoadGame() const
 	auto go = scene.AddChild("background");
 	go->AddComponent<RenderComponent>();
 	go->GetComponentOfType<RenderComponent>()->SetTexture("background.jpg");
-	go->AddComponent<TransformComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(0, 0);
 
 
 	go = scene.AddChild("logo");
 	go->AddComponent<RenderComponent>();
 	go->GetComponentOfType<RenderComponent>()->SetTexture("logo.png");
-	go->AddComponent<TransformComponent>();
 	go->GetComponentOfType<TransformComponent>()->SetPosition(216, 180);
 
-	go = scene.AddChild("Title");
-	go->AddComponent<RenderComponent>();
-	go->AddComponent<TransformComponent>();
-	go->GetComponentOfType<TransformComponent>()->SetPosition(80, 20);
-	go->AddComponent<TextComponent>();
+	auto title = scene.AddChild("Title");
+	title->AddComponent<RenderComponent>();
+	title->GetComponentOfType<TransformComponent>()->SetPosition(80, 20);
+	title->AddComponent<TextComponent>();
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	go->GetComponentOfType<TextComponent>()->SetFont(font);
-	go->GetComponentOfType<TextComponent>()->SetText("Programming 4 Assignment");
+	title->GetComponentOfType<TextComponent>()->SetFont(font);
+	title->GetComponentOfType<TextComponent>()->SetText("Programming 4 Assignment");
 
-
-	go = scene.AddChild("fpsCounter");
+	go = title->AddChild("fpsCounter");
 	go->AddComponent<RenderComponent>();
-	go->AddComponent<TransformComponent>();
-	go->GetComponentOfType<TransformComponent>()->SetPosition(10, 10);
+	go->GetComponentOfType<TransformComponent>()->SetPosition(20, 50);
 	go->AddComponent<TextComponent>();
 	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	go->GetComponentOfType<TextComponent>()->SetFont(font);
@@ -96,7 +91,7 @@ void BurgerTimeGame::LoadGame() const
 	// Player 1 Life display
 	auto player1LiveDisplay = scene.AddChild("player1LiveDisplay");
 	player1LiveDisplay->AddComponent<RenderComponent>();
-	auto transformComponent = player1LiveDisplay->AddComponent<TransformComponent>();
+	auto transformComponent = player1LiveDisplay->GetComponentOfType<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 100.0f);
 	auto textComponent = player1LiveDisplay->AddComponent<TextComponent>();
 	textComponent->SetText("Lives: X");
@@ -124,7 +119,7 @@ void BurgerTimeGame::LoadGame() const
 	// Player 2 Life display
 	auto player2LiveDisplay = scene.AddChild("player2LiveDisplay");
 	player2LiveDisplay->AddComponent<RenderComponent>();
-	transformComponent = player2LiveDisplay->AddComponent<TransformComponent>();
+	transformComponent = player2LiveDisplay->GetComponentOfType<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 300.0f);
 	textComponent = player2LiveDisplay->AddComponent<TextComponent>();
 	textComponent->SetText("Lives: 3");
@@ -140,7 +135,7 @@ void BurgerTimeGame::LoadGame() const
 
 	// Player2 Score Display
 	auto player2Score = scene.AddChild("player2Score");
-	transformComponent = player2Score->AddComponent<TransformComponent>();
+	transformComponent = player2Score->GetComponentOfType<TransformComponent>();
 	transformComponent->SetPosition(0.0f, 400.0f);
 	textComponent = player2Score->AddComponent<TextComponent>();
 	textComponent->SetText("Score: XX");

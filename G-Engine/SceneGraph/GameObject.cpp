@@ -255,8 +255,11 @@ void dae::GameObject::Render() const
 	// update components
 	for (auto& upComponent : m_upComponentVec) upComponent->Render();
 
+
+
 	// update children
 	for (GameObject* pChild : m_pChildrenVec) pChild->Render();
+
 }
 
 void dae::GameObject::RenderImGui() const
