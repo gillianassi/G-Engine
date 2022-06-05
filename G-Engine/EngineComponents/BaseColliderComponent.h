@@ -1,16 +1,16 @@
 #pragma once
 #include "BaseComponent.h"
 
-class b2Fixture;
 
+class b2Fixture;
+class b2Shape;
 namespace dae
 {
-
+	class RigidBodyComponent;
 	class Physics;
 	class BaseColliderComponent : public BaseComponent
 	{
 	public:
-
 
 		struct PhysicsMaterial
 		{
@@ -33,7 +33,7 @@ namespace dae
 		{
 
 		}
-		virtual ~BaseColliderComponent() = default;
+		virtual ~BaseColliderComponent();
 
 		BaseColliderComponent(const BaseColliderComponent& other) = delete;
 		BaseColliderComponent(BaseColliderComponent&& other) = delete;
@@ -42,7 +42,6 @@ namespace dae
 
 		
 		virtual void Initialize() override = 0;
-		virtual void Update() override = 0;
 		
 		void SetIsTrigger(bool isTrigger) {m_IsTrigger = isTrigger;}
 		bool IsTrigger() { return m_IsTrigger; };
@@ -58,12 +57,16 @@ namespace dae
 		b2Fixture* GetFixture() const { return m_pFixture; }
 
 	protected:
+
+		friend class RigidBodyComponent;
+
+		void AttachShapeToRigidBody();
 		bool m_IsTrigger{};
 
 		PhysicsMaterial m_PhysicsMaterial;
-
 		// necessary too bind the shape to a rigid body
 		b2Fixture* m_pFixture{};
-		
+		b2Shape* m_pColliderShape{};
+
 	};
 }

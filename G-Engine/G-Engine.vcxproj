@@ -310,6 +310,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClCompile Include="Core\Physics.cpp" />
     <ClCompile Include="Core\Renderer.cpp" />
     <ClCompile Include="Core\Time.cpp" />
+    <ClCompile Include="EngineComponents\BaseColliderComponent.cpp" />
     <ClCompile Include="EngineComponents\BoxColliderComponent.cpp" />
     <ClCompile Include="EngineComponents\FPSComponent.cpp" />
     <ClCompile Include="EngineComponents\RenderComponent.cpp" />

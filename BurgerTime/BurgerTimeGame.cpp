@@ -2,23 +2,26 @@
 #include "BurgerTimeGame.h"
 
 // Engine Includes
-#include "Core/Time.h"
+#include <Core/Time.h>
 
-#include "SceneGraph/SceneManager.h"
-#include "SceneGraph/GameObject.h"
-#include "SceneGraph/Scene.h"
+#include <SceneGraph/SceneManager.h>
+#include <SceneGraph/GameObject.h>
+#include <SceneGraph/Scene.h>
 
-#include "ResourceManagement/ResourceManager.h"
+#include <ResourceManagement/ResourceManager.h>
 
-#include "Input/InputManager.h"
-#include "Input/Command.h"
+#include <Input/InputManager.h>
+#include <Input/Command.h>
 
-#include "EngineComponents/RenderComponent.h"
-#include "EngineComponents/TransformComponent.h"
-#include "EngineComponents/FPSComponent.h"
+#include <EngineComponents/RenderComponent.h>
+#include <EngineComponents/TransformComponent.h>
+#include <EngineComponents/FPSComponent.h>
+#include <EngineComponents/RigidBodyComponent.h>
+#include <EngineComponents/BoxColliderComponent.h>
+#include <Core/Physics.h>
 
-#include "Audio/BaseAudio.h"
-#include "ResourceManagement/Locator.h"
+#include <Audio/BaseAudio.h>
+#include <ResourceManagement/Locator.h>
 
 // Game includes
 //#include "TrashTheCacheComponent.h"
@@ -73,6 +76,13 @@ void BurgerTimeGame::LoadGame() const
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	title->GetComponentOfType<TextComponent>()->SetFont(font);
 	title->GetComponentOfType<TextComponent>()->SetText("Programming 4 Assignment");
+
+	auto rigidBody = title->AddComponent<RigidBodyComponent>();
+	rigidBody->SetRigidBodyType(RigidBodyComponent::RigidBodyType::Dynamic);
+	//auto boxCollision= title->AddComponent<BoxColliderComponent>();
+	//title->AddComponent<RigidBodyComponent>();
+	title->AddComponent<BoxColliderComponent>();
+	
 
 	go = title->AddChild("fpsCounter");
 	go->AddComponent<RenderComponent>();

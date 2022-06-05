@@ -17,25 +17,10 @@ dae::BoxColliderComponent::BoxColliderComponent(GameObject* pOwner) :
 
 void dae::BoxColliderComponent::Initialize()
 {
-	b2PolygonShape boxShape;
-	boxShape.SetAsBox(0.f, 0.f);
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &boxShape;
-	fixtureDef.density = m_PhysicsMaterial.Density;
-	fixtureDef.friction = m_PhysicsMaterial.Friction;
-
-}
-
-void dae::BoxColliderComponent::Update()
-{
-}
-
-void dae::BoxColliderComponent::FixedUpdate()
-{
-}
-
-void dae::BoxColliderComponent::Render()
-{
+	b2PolygonShape* boxShape = new b2PolygonShape();
+	boxShape->SetAsBox(m_Description.Width, m_Description.Height);
+	m_pColliderShape = boxShape;
+	AttachShapeToRigidBody();
 }
 
 void dae::BoxColliderComponent::RenderImGui()
@@ -68,27 +53,4 @@ void dae::BoxColliderComponent::SetRotation(float rotation)
 	m_Description.Rotation = rotation;
 }
 
-void dae::BoxColliderComponent::AttachToRigidBody(GameObject*)
-{
-	//const auto rigidBody = pGameObject->GetComponentOfType<RigidBodyComponent>();
-
-	//if (rigidBody == nullptr)
-	//{
-	//	// check if the parent has a rigid body to attach to
-	//	GameObject* pParent = pGameObject->GetParent();
-	//	if (pParent != nullptr)
-	//	{
-	//		AttachToRigidBody(pParent);
-	//	}
-	//	else
-	//	{
-	//		std::cout << "BoxCollider:AttachToRigidBody() No Rigidbody found!" << std::endl;
-	//	}
-	//}
-	//else
-	//{
-	//	rigidBody->
-	//}
-
-}
 

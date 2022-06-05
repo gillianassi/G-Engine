@@ -9,6 +9,17 @@ namespace dae
 	public:
 		struct BoxColliderDescr
 		{
+			BoxColliderDescr()
+			{
+				physicsMaterial = PhysicsMaterial();
+				Width = 1.f;
+				Height = 1.f;
+				PivotX = 0.f;
+				PivotY = 0.f;
+				Rotation = 0.f;
+
+			}
+			PhysicsMaterial physicsMaterial;
 			float Width;
 			float Height;
 			float PivotX;
@@ -26,9 +37,6 @@ namespace dae
 
 
 		virtual void Initialize() override;
-		virtual void Update() override;
-		virtual void FixedUpdate() override;
-		virtual void Render() override;
 		virtual void RenderImGui() override;
 
 		void SetColliderTransform(BoxColliderDescr descr);
@@ -47,7 +55,6 @@ namespace dae
 		friend class RigidBodyComponent;
 		friend class TransformComponent;
 
-		void AttachToRigidBody(GameObject* pGameObject);
 
 
 		BoxColliderDescr m_Description{};
