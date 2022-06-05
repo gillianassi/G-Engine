@@ -60,7 +60,6 @@ bool dae::InputManager::ProcessInput()
 	for (size_t controllerIndex = 0; controllerIndex < m_pControllers.size(); controllerIndex++)
 	{
 		m_pControllers[controllerIndex]->ProcessInput();
-
 		// Handle both controller and keyboard
 		HandleInput((unsigned int)controllerIndex);
 	}

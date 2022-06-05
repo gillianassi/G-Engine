@@ -4,6 +4,7 @@
 
 float Time::deltaTime = 0.f;
 float Time::elapsedTime = 0.f;
+float Time::fixedTimeStep = 0.016f;
 
 Time::Time()
 {

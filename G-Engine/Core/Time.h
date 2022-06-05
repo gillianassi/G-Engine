@@ -18,6 +18,7 @@ public:
 
 	static float elapsedTime;
 	static float deltaTime;
+	static float fixedTimeStep;
 
 private:
 

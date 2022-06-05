@@ -98,10 +98,10 @@ void dae::GEngine::Run()
 
 			// Fixed Update
 			// MaxNrOfUpdates ensures you can escape the loop if there is too much lag
-			while (lag >= m_FixedTimeStep && nrOfUpdates <= m_MaxNrOfUpdatesPerFrame)
+			while (lag >= Time::fixedTimeStep && nrOfUpdates <= m_MaxNrOfUpdatesPerFrame)
 			{
 				sceneManager.FixedUpdate();
-				lag -= m_FixedTimeStep;
+				lag -= Time::fixedTimeStep;
 				++nrOfUpdates;
 			}
 

@@ -1,11 +1,19 @@
 #pragma once
 
+#include <functional>
+#include "Core/ContactListener.h"
+
+
+
 namespace dae
 {
 	class GameObject;
+	class Physics;
 	class BaseComponent
 	{
 	public:
+		typedef std::function<void(GameObject* pTriggerObject, GameObject* pOtherObject, ContactListener::ContactType action)> PhysicsCallback;
+
 		BaseComponent(GameObject* pOwner, bool enabled = true):
 			m_pOwner{ pOwner },
 			m_IsEnabled{ enabled },
@@ -38,6 +46,7 @@ namespace dae
 		void Destroy() { m_IsMarkedForDestroy = true; }
 		bool IsMarkedForDestroy() { return m_IsMarkedForDestroy; }
 
+		void SetOnTriggerCallBack(PhysicsCallback callback) { m_OnTriggerCallback = callback; };
 
 
 	protected:
@@ -46,6 +55,7 @@ namespace dae
 
 	private:
 		friend GameObject;
+		friend Physics;
 
 
 		bool m_IsMarkedForDestroy{ false }, m_MarkedForEnable{ true };
@@ -58,5 +68,8 @@ namespace dae
 			m_IsEnabled = m_MarkedForEnable;
 			(m_IsEnabled) ? OnEnable() : OnDIsable();
 		}
+
+		PhysicsCallback m_OnTriggerCallback{};
+
 	};
 }

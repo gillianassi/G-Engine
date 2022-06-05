@@ -4,6 +4,7 @@
 
 namespace dae
 {
+	class Physics;
 	class Scene final
 	{
 	public:
@@ -21,6 +22,8 @@ namespace dae
 
 		std::string GetSceneName() const { return m_Name; }
 		
+		Physics* GetScenePhysics() const { return m_ScenePhysics; }
+
 
 	private: 
 		friend class SceneManager;
@@ -46,6 +49,9 @@ namespace dae
 		bool m_IsInitialized{ false };
 
 		static unsigned int m_IdCounter; 
+
+		Physics* m_ScenePhysics;
+
 	};
 
 }

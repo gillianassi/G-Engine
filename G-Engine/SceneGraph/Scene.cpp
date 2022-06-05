@@ -3,12 +3,16 @@
 
 #include "GameObject.h"
 #include "EngineComponents/RenderComponent.h"
+#include "Core/Physics.h"
 
 using namespace dae;
 
 unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name) : m_Name(name) {}
+Scene::Scene(const std::string& name) : 
+	m_Name(name),
+	m_ScenePhysics{new Physics()}
+{}
 
 Scene::~Scene()
 {
@@ -18,6 +22,9 @@ Scene::~Scene()
 		m_Objects[i] = nullptr;
 	}
 	m_Objects.clear();
+
+	delete m_ScenePhysics;
+	m_ScenePhysics = nullptr;
 }
 
 GameObject* Scene::AddChild(const std::string& name)
@@ -54,6 +61,8 @@ void dae::Scene::FixedUpdate() const
 	{
 		object->FixedUpdate();
 	}
+
+	m_ScenePhysics->Update();
 }
 
 void Scene::Render() const

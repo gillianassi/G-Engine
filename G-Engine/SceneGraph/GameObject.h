@@ -55,7 +55,7 @@ namespace dae
 		const std::vector<int>& GetTags() const { return m_Tags; }
 		void AddTag(int tag, bool propagateToChildren = true);
 		
-		void Destroy() { m_IsMarkedForDestroy = true; };
+		void Destroy();
 		bool IsMarkedForDestroy() { return m_IsMarkedForDestroy; }
 
 	private:
@@ -102,6 +102,8 @@ namespace dae
 	// *************************************
 	// ******** Tempated functions *********
 	// *************************************
+
+
 	template<typename TypeToAdd>
 	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToAdd>, TypeToAdd*> 
 		GameObject::AddComponent()
@@ -111,11 +113,13 @@ namespace dae
 		return dynamic_cast<TypeToAdd*>(m_upComponentVec.back().get());
 	}
 
+
+
 	template<typename TypeToGet>
-	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*> 
+	inline std::enable_if_t<std::is_base_of_v<BaseComponent, TypeToGet>, TypeToGet*>
 		GameObject::GetComponentOfType() const
 	{
-		for (const auto& c: m_upComponentVec)
+		for (const auto& c : m_upComponentVec)
 		{
 			if (TypeToGet* pComponent = dynamic_cast<TypeToGet*>(c.get()))
 				return pComponent;

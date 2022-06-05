@@ -52,6 +52,15 @@ void dae::GameObject::AddTag(int tag, bool propagateToChildren)
 	}
 }
 
+void dae::GameObject::Destroy()
+{
+	m_IsMarkedForDestroy = true;
+	// mark all children and components for destroy
+	for (auto& upComponent : m_upComponentVec) upComponent->Destroy();
+	for (GameObject* pChild : m_pChildrenVec) pChild->Destroy();
+
+}
+
 
 dae::GameObject* dae::GameObject::GetParent() const
 {
