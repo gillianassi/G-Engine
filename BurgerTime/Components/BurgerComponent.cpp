@@ -7,6 +7,12 @@ BurgerComponent::BurgerComponent(dae::GameObject* pOwner) :
 {
 }
 
+
+
+void BurgerComponent::Initialize()
+{
+}
+
 void BurgerComponent::Update()
 {
 }

@@ -1,14 +1,15 @@
 #pragma once
+#include "EngineComponents/RigidBodyComponent.h"
 
+// box2D implementation created using 
+// https://www.youtube.com/watch?v=kEClRFKyGkw as reference
 
 class b2World;
-
 
 namespace dae
 {
 	class ContactListener;
 
-	class RigidBodyComponent;
 	class Physics final
 	{
 	public:
@@ -22,11 +23,14 @@ namespace dae
 
 		void Update() const;
 
+		// bodies that can undergo physics
 		void AddRigidBody(RigidBodyComponent* rigidBody);
 		void RemoveRigidBody(RigidBodyComponent* rigidBody);
 
 	private:
-		b2World* m_pWorld;
+		// will hold all the different rigid bodies and physics shapes for the 
+		// physics simulation 
+		std::unique_ptr< b2World> m_pWorld;
 		std::unique_ptr<ContactListener> m_pContactListener;
 
 		std::vector<RigidBodyComponent*> m_pRigidBodies;

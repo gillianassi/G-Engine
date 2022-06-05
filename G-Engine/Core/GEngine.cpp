@@ -93,7 +93,7 @@ void dae::GEngine::Run()
 			lag += Time::deltaTime;
 			doContinue = input.ProcessInput();
 
-			// handle enable, disable, and remove
+			// handle init, enable, disable, and remove
 			sceneManager.UpdateSceneGraph();
 
 			// Fixed Update

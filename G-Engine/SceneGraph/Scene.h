@@ -24,6 +24,8 @@ namespace dae
 		
 		Physics* GetScenePhysics() const { return m_ScenePhysics; }
 
+		void AddForInitialize(GameObject* pGameObject);
+
 
 	private: 
 		friend class SceneManager;
@@ -39,12 +41,13 @@ namespace dae
 
 
 
-		friend void dae::GameObject::SetParent(GameObject* pGo, bool hasCheckedHierarchy);
-		friend void dae::GameObject::AddChild(GameObject* pGo, bool hasCheckedHierarchy);
+		friend void dae::GameObject::ReParent(GameObject* pGo, bool hasCheckedHierarchy);
+		friend void dae::GameObject::ReChild(GameObject* pGo, bool hasCheckedHierarchy);
 		void RemoveChildFromChildVec(GameObject* go);
 
 		std::string m_Name;
 		std::vector <GameObject*> m_Objects{};
+		std::vector <GameObject*> m_UnInitializedObjects{};
 
 		bool m_IsInitialized{ false };
 

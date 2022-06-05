@@ -4,7 +4,7 @@
 namespace dae
 {
 	class RigidBodyComponent;
-	class BoxCollider : public BaseColliderComponent
+	class BoxColliderComponent : public BaseColliderComponent
 	{
 	public:
 		struct BoxColliderDescr
@@ -16,13 +16,13 @@ namespace dae
 			float Rotation;
 		};
 
-		BoxCollider(GameObject* pOwner);
-		virtual ~BoxCollider() = default;
+		BoxColliderComponent(GameObject* pOwner);
+		virtual ~BoxColliderComponent() = default;
 
-		BoxCollider(const BoxCollider& other) = delete;
-		BoxCollider(BoxCollider&& other) = delete;
-		BoxCollider& operator=(const BoxCollider& other) = delete;
-		BoxCollider& operator=(BoxCollider&& other) = delete;
+		BoxColliderComponent(const BoxColliderComponent& other) = delete;
+		BoxColliderComponent(BoxColliderComponent&& other) = delete;
+		BoxColliderComponent& operator=(const BoxColliderComponent& other) = delete;
+		BoxColliderComponent& operator=(BoxColliderComponent&& other) = delete;
 
 
 		virtual void Initialize() override;
@@ -50,7 +50,7 @@ namespace dae
 		void AttachToRigidBody(GameObject* pGameObject);
 
 
-		BoxColliderDescr m_Description;
-		RigidBodyComponent* m_pRigidbody;
+		BoxColliderDescr m_Description{};
+		RigidBodyComponent* m_pRigidbody{};
 	};
 }

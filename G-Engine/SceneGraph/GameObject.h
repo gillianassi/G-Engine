@@ -44,8 +44,8 @@ namespace dae
 		// create a new gameobject
 		GameObject* AddChild(std::string name, bool inheritTags = true);
 		// edit the hierarchy
-		void AddChild(GameObject* go, bool hasCheckedHierarchy = false);
-		void SetParent(GameObject* parent, bool hasCheckedHierarchy = false);
+		void ReChild(GameObject* go, bool hasCheckedHierarchy = false);
+		void ReParent(GameObject* parent, bool hasCheckedHierarchy = false);
 
 		// base
 		bool IsEnabled() const { return m_IsEnabled; }
@@ -57,6 +57,8 @@ namespace dae
 		
 		void Destroy();
 		bool IsMarkedForDestroy() { return m_IsMarkedForDestroy; }
+
+		Scene* GetScene() { return m_pScene; }
 
 	private:
 		friend Scene;

@@ -101,12 +101,13 @@ dae::GameObject* dae::GameObject::AddChild(std::string name, bool inheritTags)
 {
 	GameObject* pChild = new GameObject(name, this, m_pScene, inheritTags); // Can't use make_shared because of private constructor
 	m_pChildrenVec.push_back(pChild);
+	m_pScene->AddForInitialize(pChild);
 
 	return pChild;
 
 }
 
-void dae::GameObject::SetParent(GameObject* parent, bool hasCheckedHierarchy)
+void dae::GameObject::ReParent(GameObject* parent, bool hasCheckedHierarchy)
 {
 	if (!hasCheckedHierarchy)
 	{
@@ -139,13 +140,13 @@ void dae::GameObject::SetParent(GameObject* parent, bool hasCheckedHierarchy)
 			m_pScene->RemoveChildFromChildVec(this);
 		}
 		// simply add the child with no extra checks
-		parent->AddChild(this, true);
+		parent->ReChild(this, true);
 	}
 
 	m_pParent = parent;
 }
 
-void dae::GameObject::AddChild(GameObject* pGo, bool hasCheckedHierarchy)
+void dae::GameObject::ReChild(GameObject* pGo, bool hasCheckedHierarchy)
 {
 
 	if (!hasCheckedHierarchy)
@@ -182,7 +183,8 @@ void dae::GameObject::AddChild(GameObject* pGo, bool hasCheckedHierarchy)
 			m_pScene->RemoveChildFromChildVec(pGo);
 		}
 		// simply set the parent with no extra checks
-		pGo->SetParent(this, true);
+		pGo->ReParent(this, true);
+
 	}
 
 	m_pChildrenVec.push_back(pGo);

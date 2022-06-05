@@ -9,7 +9,12 @@ using namespace dae;
 
 unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name) : 
+void dae::Scene::AddForInitialize(GameObject* pGameObject)
+{
+	m_UnInitializedObjects.emplace_back(pGameObject);
+}
+
+Scene::Scene(const std::string& name) :
 	m_Name(name),
 	m_ScenePhysics{new Physics()}
 {}
@@ -32,6 +37,7 @@ GameObject* Scene::AddChild(const std::string& name)
 	// GameObj
 	GameObject* pObject = new GameObject(name, nullptr, this);
 	m_Objects.push_back(pObject);
+	AddForInitialize(pObject);
 
 	return pObject;
 }
@@ -91,6 +97,12 @@ void dae::Scene::UpdateSceneGraph()
 			pChild = nullptr;
 		}
 	}
+	for (GameObject* pObj : m_UnInitializedObjects)
+	{
+		pObj->Initialize();
+	}
+	m_UnInitializedObjects.clear();
+
 	// move all elements you want to erase to the end
 	const auto beginEraseGameObjectItt = std::remove_if(m_Objects.begin(), m_Objects.end(),
 		[](GameObject* pObject) { return pObject->IsMarkedForDestroy(); });

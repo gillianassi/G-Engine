@@ -62,7 +62,6 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 	const auto& shpScene = std::shared_ptr<Scene>(new Scene(name));
 	m_shpScenes.push_back(shpScene);
 
-	shpScene->Initialize();
 
 	if (m_shpActiveScene == nullptr && m_shpNextScene == nullptr)
 		m_shpNextScene = shpScene;

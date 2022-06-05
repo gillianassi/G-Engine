@@ -17,14 +17,15 @@
 
 dae::Physics::Physics()
 {
-	m_pWorld = new b2World(b2Vec2(0.f, -9.81f));
+	// setup the world
+	// define the gravity
+	b2Vec2 gravity = b2Vec2(0.f, -9.81f);
+	m_pWorld = std::make_unique<b2World>(gravity);
 	m_pContactListener = std::make_unique<dae::ContactListener>();
 }
 
 dae::Physics::~Physics()
 {
-	delete m_pWorld;
-	m_pWorld = nullptr;
 }
 
 void dae::Physics::Update() const
@@ -59,19 +60,15 @@ void dae::Physics::AddRigidBody(RigidBodyComponent* rigidBody)
 {
 	m_pRigidBodies.push_back(rigidBody);
 
-	const auto transform = rigidBody->GetGameObject()->GetTransform();
+	const auto pos = rigidBody->GetGameObject()->GetTransform()->GetWorldPosition();
 
-	b2BodyDef bodyDef;
-	bodyDef.type = static_cast<b2BodyType>(rigidBody->GetRigidBodyType());
+	b2BodyDef bodyDef = b2BodyDef();
 	bodyDef.position.Set(
-		transform->GetWorldPosition().x,
-		transform->GetWorldPosition().y);
-	bodyDef.gravityScale = rigidBody->GetGravityScale();
+		pos.x,
+		pos.y);
 	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(rigidBody);
 
 	const auto body = m_pWorld->CreateBody(&bodyDef);
-	body->SetFixedRotation(rigidBody->HasFixedRotation());
-
 	rigidBody->SetBody(body);
 }
 

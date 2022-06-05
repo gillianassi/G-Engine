@@ -14,14 +14,22 @@ namespace dae
 
 		struct PhysicsMaterial
 		{
-			float Density {1.f};
-			float Restitution {0.f};
-			float RestitutionThreshold{0.f};
-			float Friction{0.1f};
+			PhysicsMaterial()
+			{
+				Density = 1.f ;
+				Restitution = 0.f;
+				RestitutionThreshold = 0.f;
+				Friction =0.3f;
+			}
+			float Density;
+			float Restitution;
+			float RestitutionThreshold;
+			float Friction;
 		};
 
 		BaseColliderComponent(GameObject* pOwner) :
-			BaseComponent(pOwner)
+			BaseComponent(pOwner),
+			m_PhysicsMaterial{ PhysicsMaterial() }
 		{
 
 		}
@@ -32,6 +40,8 @@ namespace dae
 		BaseColliderComponent& operator=(const BaseColliderComponent& other) = delete;
 		BaseColliderComponent& operator=(BaseColliderComponent&& other) = delete;
 
+		
+		virtual void Initialize() override = 0;
 		virtual void Update() override = 0;
 		
 		void SetIsTrigger(bool isTrigger) {m_IsTrigger = isTrigger;}
@@ -39,7 +49,7 @@ namespace dae
 
 
 
-
+		void SetPhysicsMaterial(const PhysicsMaterial& mat) { m_PhysicsMaterial = mat; }
 
 		void SetFixture(b2Fixture* pFixture)
 		{
@@ -47,10 +57,12 @@ namespace dae
 		}
 		b2Fixture* GetFixture() const { return m_pFixture; }
 
-	private:
+	protected:
 		bool m_IsTrigger{};
 
+		PhysicsMaterial m_PhysicsMaterial;
 
+		// necessary too bind the shape to a rigid body
 		b2Fixture* m_pFixture{};
 		
 	};

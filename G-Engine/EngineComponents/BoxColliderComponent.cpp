@@ -4,59 +4,71 @@
 #include "SceneGraph/GameObject.h"
 #include "EngineComponents/RigidBodyComponent.h"
 
-dae::BoxCollider::BoxCollider(GameObject* pOwner) :
+#include <b2_fixture.h>
+#include <b2_polygon_shape.h>
+#include <b2_body.h>
+
+
+dae::BoxColliderComponent::BoxColliderComponent(GameObject* pOwner) :
 	BaseColliderComponent(pOwner)
 {
 
 }
 
-void dae::BoxCollider::Initialize()
+void dae::BoxColliderComponent::Initialize()
+{
+	b2PolygonShape boxShape;
+	boxShape.SetAsBox(0.f, 0.f);
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &boxShape;
+	fixtureDef.density = m_PhysicsMaterial.Density;
+	fixtureDef.friction = m_PhysicsMaterial.Friction;
+
+}
+
+void dae::BoxColliderComponent::Update()
 {
 }
 
-void dae::BoxCollider::Update()
+void dae::BoxColliderComponent::FixedUpdate()
 {
 }
 
-void dae::BoxCollider::FixedUpdate()
+void dae::BoxColliderComponent::Render()
 {
 }
 
-void dae::BoxCollider::Render()
+void dae::BoxColliderComponent::RenderImGui()
 {
 }
 
-void dae::BoxCollider::RenderImGui()
-{
-}
-
-void dae::BoxCollider::SetColliderTransform(BoxColliderDescr descr)
+void dae::BoxColliderComponent::SetColliderTransform(BoxColliderDescr descr)
 {
 	m_Description = descr;
 }
 
-void dae::BoxCollider::SetWidth(float width)
+void dae::BoxColliderComponent::SetWidth(float width)
 {
 	m_Description.Width = width;
 }
 
-void dae::BoxCollider::SetHeight(float height)
+void dae::BoxColliderComponent::SetHeight(float height)
 {
 	m_Description.Height = height;
 }
 
-void dae::BoxCollider::SetPivot(float pivotX, float pivotY)
+void dae::BoxColliderComponent::SetPivot(float pivotX, float pivotY)
 {
 	m_Description.PivotX = pivotX;
 	m_Description.PivotY = pivotY;
 }
 
-void dae::BoxCollider::SetRotation(float rotation)
+void dae::BoxColliderComponent::SetRotation(float rotation)
 {
 	m_Description.Rotation = rotation;
 }
 
-void dae::BoxCollider::AttachToRigidBody(GameObject*)
+void dae::BoxColliderComponent::AttachToRigidBody(GameObject*)
 {
 	//const auto rigidBody = pGameObject->GetComponentOfType<RigidBodyComponent>();
 
