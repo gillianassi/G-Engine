@@ -114,6 +114,13 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
+void dae::Renderer::DrawRect(glm::vec2 center, float width, float height, glm::vec4 color)
+{
+	SDL_Rect rect{ int(center.x - width / 2.f), int(center.y - height / 2.f), int(width), int(height) };
+	SDL_SetRenderDrawColor(GetSDLRenderer(), Uint8(color.x * 255), Uint8(color.y * 255), Uint8(color.z * 255), Uint8(color.w * 255));
+	SDL_RenderDrawRect(GetSDLRenderer(), &rect);
+}
+
 void dae::Renderer::ShowDearImGuiExercises() const
 {
 

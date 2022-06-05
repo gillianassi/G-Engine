@@ -12,8 +12,8 @@ namespace dae
 			BoxColliderDescr()
 			{
 				physicsMaterial = PhysicsMaterial();
-				Width = 1.f;
-				Height = 1.f;
+				Width = 10.f;
+				Height = 10.f;
 				PivotX = 0.f;
 				PivotY = 0.f;
 				Rotation = 0.f;
@@ -37,6 +37,7 @@ namespace dae
 
 
 		virtual void Initialize() override;
+		virtual void Render() override;
 		virtual void RenderImGui() override;
 
 		void SetColliderTransform(BoxColliderDescr descr);
@@ -46,6 +47,7 @@ namespace dae
 		void SetPivot(float pivotX, float pivotY);
 		void SetRotation(float rotation);
 
+		void SetRenderColor(glm::vec4 color) { m_Color = color; }
 	
 
 
@@ -53,11 +55,12 @@ namespace dae
 	private:
 		friend class Physics;
 		friend class RigidBodyComponent;
-		friend class TransformComponent;
 
 
 
 		BoxColliderDescr m_Description{};
 		RigidBodyComponent* m_pRigidbody{};
+
+		glm::vec4 m_Color{};
 	};
 }

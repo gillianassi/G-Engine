@@ -95,6 +95,16 @@ void BurgerTimeGame::LoadGame() const
 	go->GetComponentOfType<TextComponent>()->SetText("XX FPS");
 	go->AddComponent<FPSComponent>();
 
+	go = scene.AddChild("platform");
+	go->GetTransform()->SetPosition(80, 50);
+	rigidBody = go->AddComponent<RigidBodyComponent>();
+	RigidBodyComponent::RigidBodyDescription desc{};
+	desc.position = go->GetTransform()->GetWorldPosition();
+	desc.type = RigidBodyComponent::RigidBodyType::Static;
+	rigidBody->SetInitialDescription(desc);
+	go->AddComponent<BoxColliderComponent>();
+
+
 	// Week 5
 	// Achievment Manager
 	auto achievement = scene.AddChild("achievement");

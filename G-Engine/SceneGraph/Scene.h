@@ -4,6 +4,7 @@
 
 namespace dae
 {
+	class RigidBodyComponent;
 	class Physics;
 	class Scene final
 	{
@@ -25,7 +26,7 @@ namespace dae
 		Physics* GetScenePhysics() const { return m_ScenePhysics; }
 
 		void AddForInitialize(GameObject* pGameObject);
-
+		void AddToRigidBodyQueue(RigidBodyComponent* pRigidBody);
 
 	private: 
 		friend class SceneManager;
@@ -48,6 +49,7 @@ namespace dae
 		std::string m_Name;
 		std::vector <GameObject*> m_Objects{};
 		std::vector <GameObject*> m_UnInitializedObjects{};
+		std::vector <RigidBodyComponent*> m_RigidBodyQueue{};
 
 		bool m_IsInitialized{ false };
 

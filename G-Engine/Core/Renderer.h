@@ -22,6 +22,8 @@ namespace dae
 
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
+		void DrawRect(glm::vec2 pos, float width, float height, glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
+
 
 		SDL_Renderer* GetSDLRenderer() const { return m_Renderer; }
 

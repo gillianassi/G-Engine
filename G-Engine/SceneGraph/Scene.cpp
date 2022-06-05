@@ -14,6 +14,11 @@ void dae::Scene::AddForInitialize(GameObject* pGameObject)
 	m_UnInitializedObjects.emplace_back(pGameObject);
 }
 
+void dae::Scene::AddToRigidBodyQueue(RigidBodyComponent* pRigidBody)
+{
+	m_RigidBodyQueue.emplace_back(pRigidBody);
+}
+
 Scene::Scene(const std::string& name) :
 	m_Name(name),
 	m_ScenePhysics{new Physics()}
@@ -97,11 +102,19 @@ void dae::Scene::UpdateSceneGraph()
 			pChild = nullptr;
 		}
 	}
+	// Initialize all unInitialized Objects
 	for (GameObject* pObj : m_UnInitializedObjects)
 	{
 		pObj->Initialize();
 	}
 	m_UnInitializedObjects.clear();
+
+	// Add rigidbodies
+	for (RigidBodyComponent* pRigidBody : m_RigidBodyQueue)
+	{
+		m_ScenePhysics->AddRigidBody(pRigidBody);
+	}
+	m_RigidBodyQueue.clear();
 
 	// move all elements you want to erase to the end
 	const auto beginEraseGameObjectItt = std::remove_if(m_Objects.begin(), m_Objects.end(),

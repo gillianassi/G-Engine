@@ -3,6 +3,8 @@
 
 #include "SceneGraph/GameObject.h"
 #include "EngineComponents/RigidBodyComponent.h"
+#include "EngineComponents/TransformComponent.h"
+#include "Core/Renderer.h"
 
 #include <b2_fixture.h>
 #include <b2_polygon_shape.h>
@@ -10,7 +12,8 @@
 
 
 dae::BoxColliderComponent::BoxColliderComponent(GameObject* pOwner) :
-	BaseColliderComponent(pOwner)
+	BaseColliderComponent(pOwner),
+	m_Color{1.f,0.f,0.f,1.f}
 {
 
 }
@@ -18,9 +21,18 @@ dae::BoxColliderComponent::BoxColliderComponent(GameObject* pOwner) :
 void dae::BoxColliderComponent::Initialize()
 {
 	b2PolygonShape* boxShape = new b2PolygonShape();
-	boxShape->SetAsBox(m_Description.Width, m_Description.Height);
+	boxShape->SetAsBox(m_Description.Width * 0.5f, m_Description.Height * 0.5f);
 	m_pColliderShape = boxShape;
 	AttachShapeToRigidBody();
+}
+
+void dae::BoxColliderComponent::Render()
+{
+	if (m_RenderCollider)
+	{
+		const auto& pos = GetGameObject()->GetTransform()->GetWorldPosition();
+		Renderer::GetInstance().DrawRect(pos, m_Description.Width, m_Description.Height, m_Color);
+	}
 }
 
 void dae::BoxColliderComponent::RenderImGui()

@@ -46,6 +46,11 @@ namespace dae
 		void SetIsTrigger(bool isTrigger) {m_IsTrigger = isTrigger;}
 		bool IsTrigger() { return m_IsTrigger; };
 
+		void EnableRenderCollider(bool enable)
+		{
+			m_RenderCollider = enable;
+		}
+
 
 
 		void SetPhysicsMaterial(const PhysicsMaterial& mat) { m_PhysicsMaterial = mat; }
@@ -62,6 +67,8 @@ namespace dae
 
 		void AttachShapeToRigidBody();
 		bool m_IsTrigger{};
+
+		bool m_RenderCollider{true};
 
 		PhysicsMaterial m_PhysicsMaterial;
 		// necessary too bind the shape to a rigid body

@@ -84,6 +84,7 @@ namespace dae
 
 		// Getters
 		const RigidBodyDescription& GetInitialDescription() { return m_Description; }
+		void SetInitialDescription( const RigidBodyDescription& desc) { m_Description = desc; }
 
 		glm::vec2 GetPosition();
 		float GetAngle() ;

@@ -19,9 +19,9 @@ dae::RigidBodyComponent::RigidBodyComponent(GameObject* pOwner):
 
 void dae::RigidBodyComponent::Initialize()
 {
-	GetGameObject()->GetScene()->GetScenePhysics()->AddRigidBody(this);
 	m_pTransform = GetGameObject()->GetTransform();
 	m_Description.position = m_pTransform->GetPosition();
+	GetGameObject()->GetScene()->GetScenePhysics()->AddRigidBody(this);
 }
 
 void dae::RigidBodyComponent::FixedUpdate()
