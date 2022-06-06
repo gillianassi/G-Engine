@@ -71,3 +71,58 @@ void ResetBurgerCommand::ResetBurger()
 //	//SteamUserStats()->SetAchievement("ACH_WIN_ONE_GAME");
 //	//SteamUserStats()->StoreStats();
 //}
+
+MoveLeftCommand::MoveLeftCommand(dae::GameObject* pPeterPepper):
+	Command(),
+	m_pPlayer{ pPeterPepper->GetComponentOfType<PeterPepperComponent>()}
+{
+}
+
+void MoveLeftCommand::MoveLeft()
+{
+	m_pPlayer->MoveLeft();
+}
+
+MoveRightCommand::MoveRightCommand(dae::GameObject* pPeterPepper):
+	Command(),
+	m_pPlayer{ pPeterPepper->GetComponentOfType<PeterPepperComponent>()}
+{
+}
+
+void MoveRightCommand::MoveRight()
+{
+	m_pPlayer->MoveRight();
+}
+
+MoveUpCommand::MoveUpCommand(dae::GameObject* pPeterPepper):
+	Command(),
+	m_pPlayer{ pPeterPepper->GetComponentOfType<PeterPepperComponent>()}
+{
+}
+
+void MoveUpCommand::MoveUp()
+{
+	m_pPlayer->MoveUp();
+}
+
+MoveDownCommand::MoveDownCommand(dae::GameObject* pPeterPepper):
+	Command(),
+	m_pPlayer{ pPeterPepper->GetComponentOfType<PeterPepperComponent>()}
+{
+}
+
+void MoveDownCommand::MoveDown()
+{
+	m_pPlayer->MoveDown();
+}
+
+StopMovementCommand::StopMovementCommand(dae::GameObject* pPeterPepper) :
+	Command(),
+	m_pPlayer{ pPeterPepper->GetComponentOfType<PeterPepperComponent>() }
+{
+}
+
+void StopMovementCommand::StopMovement()
+{
+	m_pPlayer->StopMovement();
+}

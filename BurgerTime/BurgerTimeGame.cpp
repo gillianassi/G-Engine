@@ -78,8 +78,8 @@ void BurgerTimeGame::LoadGame() const
 	title->GetComponentOfType<TextComponent>()->SetFont(font);
 	title->GetComponentOfType<TextComponent>()->SetText("Programming 4 Assignment");
 
-	auto rigidBody = title->AddComponent<RigidBodyComponent>();
-	rigidBody->SetRigidBodyType(RigidBodyComponent::RigidBodyType::Dynamic);
+	auto rigidBody = title->AddComponent<dae::RigidBodyComponent>();
+	rigidBody->SetRigidBodyType(dae::RigidBodyComponent::RigidBodyType::Dynamic);
 	//auto boxCollision= title->AddComponent<BoxColliderComponent>();
 	//title->AddComponent<RigidBodyComponent>();
 	title->AddComponent<BoxColliderComponent>();
@@ -98,25 +98,7 @@ void BurgerTimeGame::LoadGame() const
 
 	go = scene.AddChild("platform");
 	go->GetTransform()->SetPosition(80, 50);
-	rigidBody = go->AddComponent<RigidBodyComponent>();
-	RigidBodyComponent::RigidBodyDescription desc{};
-	desc.position = go->GetTransform()->GetWorldPosition();
-	desc.type = RigidBodyComponent::RigidBodyType::Static;
-	rigidBody->SetInitialDescription(desc);
-	go->AddComponent<BoxColliderComponent>();
-	go->AddComponent<RenderComponent>();
-	auto animator = go->AddComponent<AnimatorComponent>();
-	AnimationSprite::SpriteDescription spriteDesc = AnimationSprite::SpriteDescription();
-	spriteDesc.framesPerSecond = 0.16f;
-	spriteDesc.nrAngles = 1;
-	spriteDesc.nrFrames = 3;
-	spriteDesc.nrPerType = { 1, 1, 1 };
 
-
-	int walk = animator->AddSpriteSheet("Textures/Player/PeterPepper_Walking.png", spriteDesc);
-
-	AnimatorComponent::AnimationDescription animDesc = AnimatorComponent::AnimationDescription(walk, true, 0, 3);
-	animator->AddAnimation(animDesc);
 
 
 	float platformScale = 3.f;
@@ -127,11 +109,11 @@ void BurgerTimeGame::LoadGame() const
 		// place platform
 		go->GetTransform()->SetPosition(10.f+ 16.f * i * platformScale, 100.f);
 		// create physics
-		rigidBody = go->AddComponent<RigidBodyComponent>();
+		rigidBody = go->AddComponent<dae::RigidBodyComponent>();
 
-		desc = RigidBodyComponent::RigidBodyDescription();
+		dae::RigidBodyComponent::RigidBodyDescription desc{};
 		desc.position = go->GetTransform()->GetWorldPosition();
-		desc.type = RigidBodyComponent::RigidBodyType::Static;
+		desc.type = dae::RigidBodyComponent::RigidBodyType::Static;
 		rigidBody->SetInitialDescription(desc);
 		auto collider = go->AddComponent<BoxColliderComponent>();
 		BoxColliderComponent::BoxColliderDescr colliderDesc{};
@@ -164,8 +146,17 @@ void BurgerTimeGame::LoadGame() const
 
 	// Player1 Actor
 	auto peterPepper1 = scene.AddChild("peterPepper1");
+	peterPepper1->AddComponent<RenderComponent>();
+	peterPepper1->AddComponent<dae::AnimatorComponent>();
 	auto peterPepper1Component = peterPepper1->AddComponent<PeterPepperComponent>();
 	peterPepper1Component->AddObserver(Player1Lives);
+	rigidBody = peterPepper1->AddComponent<dae::RigidBodyComponent>();
+	dae::RigidBodyComponent::RigidBodyDescription desc{};
+	desc.position = peterPepper1->GetTransform()->GetWorldPosition();
+	desc.type = dae::RigidBodyComponent::RigidBodyType::Dynamic;
+	rigidBody->SetInitialDescription(desc);
+	peterPepper1->AddComponent<BoxColliderComponent>();
+
 
 	// Player1 Score Display
 	auto player1Score = scene.AddChild("player1Score");
@@ -194,6 +185,8 @@ void BurgerTimeGame::LoadGame() const
 	auto peterPepper2 = scene.AddChild("peterPepper2");
 	auto peterPepper2Component = peterPepper2->AddComponent<PeterPepperComponent>();
 	peterPepper2Component->AddObserver(Player2Lives);
+	peterPepper2->AddComponent<RenderComponent>();
+	peterPepper2->AddComponent<dae::AnimatorComponent>();
 
 
 	// Player2 Score Display
@@ -230,12 +223,23 @@ void BurgerTimeGame::LoadGame() const
 	std::cout << "\t\t[X] - Burger drops\t\t- Shared" << std::endl;
 	// Instantiate Controls:
 	//p1
-	InputManager::GetInstance().AddInputCommand<PlayerDieCommand>
-		(SDL_SCANCODE_RIGHT, ControllerButton::ButtonA, ActivationState::BTN_HOLD, peterPepper1, InputManager::PlayerIndex::P1);
-	InputManager::GetInstance().AddInputCommand<EnemyKillCommand>
-		(ControllerButton::ButtonB, ActivationState::BTN_DOWN,enemy1, InputManager::PlayerIndex::P1);
-	InputManager::GetInstance().AddInputCommand<ReviveEnemyCommand>
-		(ControllerButton::ButtonY, ActivationState::BTN_DOWN,enemy1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<MoveLeftCommand>
+		('a', ControllerButton::DPAD_LEFT, ActivationState::BTN_HOLD, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<MoveRightCommand>
+		('d', ControllerButton::DPAD_RIGHT, ActivationState::BTN_HOLD, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<MoveUpCommand>
+		('w', ControllerButton::DPAD_UP, ActivationState::BTN_HOLD, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<MoveDownCommand>
+		('s', ControllerButton::DPAD_DOWN, ActivationState::BTN_HOLD, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<StopMovementCommand>
+		('a', ControllerButton::DPAD_LEFT, ActivationState::BTN_UP, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<StopMovementCommand>
+		('d', ControllerButton::DPAD_RIGHT, ActivationState::BTN_UP, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<StopMovementCommand>
+		('w', ControllerButton::DPAD_UP, ActivationState::BTN_UP, peterPepper1, InputManager::PlayerIndex::P1);
+	InputManager::GetInstance().AddInputCommand<StopMovementCommand>
+		('s', ControllerButton::DPAD_DOWN, ActivationState::BTN_UP, peterPepper1, InputManager::PlayerIndex::P1);
+
 	//p2
 	InputManager::GetInstance().AddInputCommand<PlayerDieCommand>
 		(ControllerButton::ButtonA, ActivationState::BTN_HOLD,peterPepper2, InputManager::PlayerIndex::P2);

@@ -5,6 +5,12 @@ namespace dae
 	class GEngine 
 	{
 	public:
+		GEngine() = default;
+		virtual ~GEngine() = default;
+		GEngine(const GEngine & other) = delete;
+		GEngine(GEngine && other) = delete;
+		GEngine& operator=(const GEngine & other) = delete;
+		GEngine& operator=(GEngine && other) = delete;
 		void Initialize();
 		virtual void LoadGame() const = 0;
 		void Cleanup();

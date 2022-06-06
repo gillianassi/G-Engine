@@ -62,6 +62,64 @@ private:
 	void ResetBurger();
 	BurgerComponent* m_pBurger;
 };
+
+class MoveLeftCommand final : public Command
+{
+public:
+	MoveLeftCommand(dae::GameObject* pPeterPepper);
+	virtual ~MoveLeftCommand() override = default;
+	void Execute() override { MoveLeft(); }
+private:
+	void MoveLeft();
+	PeterPepperComponent* m_pPlayer;
+};
+
+class MoveRightCommand final : public Command
+{
+public:
+	MoveRightCommand(dae::GameObject* pPeterPepper);
+	virtual ~MoveRightCommand() override = default;
+	void Execute() override { MoveRight(); }
+private:
+	void MoveRight();
+	PeterPepperComponent* m_pPlayer;
+};
+
+class MoveUpCommand final : public Command
+{
+public:
+	MoveUpCommand(dae::GameObject* pPeterPepper);
+	virtual ~MoveUpCommand() override = default;
+	void Execute() override { MoveUp(); }
+private:
+	void MoveUp();
+	PeterPepperComponent* m_pPlayer;
+};
+
+class MoveDownCommand final : public Command
+{
+public:
+	MoveDownCommand(dae::GameObject* pPeterPepper);
+	virtual ~MoveDownCommand() override = default;
+	void Execute() override { MoveDown(); }
+private:
+	void MoveDown();
+	PeterPepperComponent* m_pPlayer;
+};
+
+class StopMovementCommand final : public Command
+{
+public:
+	StopMovementCommand(dae::GameObject* pPeterPepper);
+	virtual ~StopMovementCommand() override = default;
+	void Execute() override { StopMovement(); }
+private:
+	void StopMovement();
+	PeterPepperComponent* m_pPlayer;
+};
+
+
+
 //
 //class GetAchievementCommand final : public Command
 //{

@@ -111,7 +111,7 @@ void dae::AnimationSprite::Update()
 	// Determine position
 	m_srcRect.left = m_ClipWidth * m_Info.AnimFrame;
 
-	m_srcRect.bottom = m_ClipHeight + m_ClipHeight * GetAnimationRow();
+	m_srcRect.bottom = m_ClipHeight * GetAnimationRow();
 }
 
 int dae::AnimationSprite::GetAnimationFrame()
@@ -173,7 +173,7 @@ void dae::AnimationSprite::DetermineAnimationFrame()
 int dae::AnimationSprite::GetAnimationRow() const
 {
 	int row{};
-	for (size_t i = 0; i < m_Info.CurrentType; i++)
+	for (size_t i = 0; i < size_t( m_Info.CurrentType); i++)
 	{
 		row += m_Description.nrPerType[i] * m_Description.nrAngles;
 	}

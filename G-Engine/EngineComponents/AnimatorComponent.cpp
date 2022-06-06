@@ -82,7 +82,7 @@ int dae::AnimatorComponent::AddSpriteSheet(const std::string& path, const Animat
 
 int dae::AnimatorComponent::AddAnimation(const AnimationDescription& desc)
 {
-	if (desc.spriteSheetId < m_SpriteSheetMap.size())
+	if (size_t(desc.spriteSheetId) < m_SpriteSheetMap.size())
 	{
 		AnimationMap[m_NrOfAnimations] = new AnimationDescription(desc.spriteSheetId, desc.loop, desc.type, desc.action,
 			desc.reverse, desc.mirrorHorizontal, desc.mirrorVertical);
@@ -93,7 +93,7 @@ int dae::AnimatorComponent::AddAnimation(const AnimationDescription& desc)
 		std::cout << "The current animation (animationID = " << std::to_string(m_NrOfAnimations)
 			<< ") references a spriteSheetID that is out of scope!  Final SpriteSheetId:" << std::to_string(m_SpriteSheetMap.size() - 1)
 			<< ". Your inserted SpriteSheetId: " << std::to_string(desc.spriteSheetId) << std::endl;
-		assert(m_SpriteSheetMap.size() < desc.spriteSheetId);
+		assert(m_SpriteSheetMap.size() < size_t(desc.spriteSheetId));
 	}
 	return m_NrOfAnimations;
 }
@@ -101,7 +101,7 @@ int dae::AnimatorComponent::AddAnimation(const AnimationDescription& desc)
 
 void dae::AnimatorComponent::PlayAnimation(int animationId, bool IsLookingLeft)
 {
-	if (animationId < AnimationMap.size())
+	if (size_t(animationId) < AnimationMap.size())
 	{
 		// no check needed for the spriteID because it is checked while making the animation
 		AnimationDescription* sprite = AnimationMap[animationId];
@@ -117,17 +117,17 @@ void dae::AnimatorComponent::PlayAnimation(int animationId, bool IsLookingLeft)
 	{
 		std::cout << "Animation ID is out of scope! Final ID number:" << std::to_string(AnimationMap.size() - 1)
 			<< ". Your inserted ID number" << std::to_string(animationId) << std::endl;
-		assert(animationId < AnimationMap.size());
+		assert(size_t(animationId) < AnimationMap.size());
 	}
 }
 
 float dae::AnimatorComponent::GetFrameWidth(int spriteSheetId)
 {
-	if (spriteSheetId >= m_SpriteSheetMap.size())
+	if (size_t(spriteSheetId) >= m_SpriteSheetMap.size())
 	{
 		std::cout << "Sprite ID is out of scope! (Max ID =" << std::to_string(m_SpriteSheetMap.size() - 1)
 			<< "). Yours was: " << std::to_string(spriteSheetId) << std::endl;
-		assert(spriteSheetId < m_SpriteSheetMap.size());
+		assert(size_t(spriteSheetId) < m_SpriteSheetMap.size());
 	}
 
 	return m_SpriteSheetMap[spriteSheetId]->GetFrameWidth();;
@@ -135,11 +135,11 @@ float dae::AnimatorComponent::GetFrameWidth(int spriteSheetId)
 
 float dae::AnimatorComponent::GetFrameHeight(int spriteSheetId)
 {
-	if (spriteSheetId >= m_SpriteSheetMap.size())
+	if (size_t(spriteSheetId) >= m_SpriteSheetMap.size())
 	{
 		std::cout << "Sprite ID is out of scope! (Max ID =" << std::to_string(m_SpriteSheetMap.size() - 1)
 			<< "). Yours was: " << std::to_string(spriteSheetId) << std::endl;
-		assert(spriteSheetId < m_SpriteSheetMap.size());
+		assert(size_t(spriteSheetId) < m_SpriteSheetMap.size());
 	}
 
 	return m_SpriteSheetMap[spriteSheetId]->GetFrameHeight();;
