@@ -230,6 +230,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="Core\SingleInstance.h" />
     <ClInclude Include="Core\Singleton.h" />
     <ClInclude Include="Core\Time.h" />
+    <ClInclude Include="EngineComponents\AnimatorComponent.h" />
     <ClInclude Include="EngineComponents\BaseColliderComponent.h" />
     <ClInclude Include="EngineComponents\BaseComponent.h" />
     <ClInclude Include="EngineComponents\BoxColliderComponent.h" />
@@ -243,6 +244,8 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="Input\Command.h" />
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Misc\AnimationSprite.h" />
+    <ClInclude Include="Misc\Structs.h" />
     <ClInclude Include="ResourceManagement\Font.h" />
     <ClInclude Include="ResourceManagement\Locator.h" />
     <ClInclude Include="ResourceManagement\ResourceManager.h" />
@@ -310,6 +313,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     <ClCompile Include="Core\Physics.cpp" />
     <ClCompile Include="Core\Renderer.cpp" />
     <ClCompile Include="Core\Time.cpp" />
+    <ClCompile Include="EngineComponents\AnimatorComponent.cpp" />
     <ClCompile Include="EngineComponents\BaseColliderComponent.cpp" />
     <ClCompile Include="EngineComponents\BoxColliderComponent.cpp" />
     <ClCompile Include="EngineComponents\FPSComponent.cpp" />
@@ -326,6 +330,7 @@ echo 480 &gt;&gt; $(OutputPath)steam_appid.txt</Command>
     </ClCompile>
     <ClCompile Include="Input\Controller.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Misc\AnimationSprite.cpp" />
     <ClCompile Include="ResourceManagement\Font.cpp" />
     <ClCompile Include="ResourceManagement\Locator.cpp" />
     <ClCompile Include="ResourceManagement\ResourceManager.cpp" />

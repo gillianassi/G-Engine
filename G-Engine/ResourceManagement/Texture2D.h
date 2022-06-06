@@ -16,7 +16,12 @@ namespace dae
 		Texture2D(Texture2D &&) = delete;
 		Texture2D & operator= (const Texture2D &) = delete;
 		Texture2D & operator= (const Texture2D &&) = delete;
+
+		void QueryDimensions();
+		int GetWidth() { return m_Width; }
+		int GetHeight() { return m_Height; }
 	private:
-		SDL_Texture* m_Texture;
+		int m_Width, m_Height;
+		SDL_Texture* m_Texture{};
 	};
 }

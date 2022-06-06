@@ -48,9 +48,12 @@ namespace dae
 
 		void SetOnTriggerCallBack(PhysicsCallback callback) { m_OnTriggerCallback = callback; };
 
+		bool IsInitialized() {return m_IsInitialized;}
+		void SetInitialized(bool initialized) { m_IsInitialized = initialized; }
 
 	protected:
 		bool m_IsEnabled{ true };
+		bool m_IsInitialized{ false };
 		GameObject* m_pOwner{};
 
 	private:

@@ -7,8 +7,15 @@
 dae::GameObject::GameObject(const std::string& name, GameObject* pParent, Scene* pScene, bool propagateTags):
 	m_Name{name},
 	m_pParent{pParent},
+	m_upComponentVec{},
+	m_pChildrenVec{},
 	m_pScene{pScene},
-	m_pTransform{AddComponent<TransformComponent>()}
+	m_pTransform{AddComponent<TransformComponent>()},
+	m_Tags{},
+	m_IsMarkedForDestroy{false},
+	m_IsEnabled{true},
+	m_MarkedForEnable{true},
+	m_IsInitialised{false}
 {
 	if (propagateTags && m_pParent != nullptr)
 	{
@@ -221,15 +228,22 @@ bool dae::GameObject::HasChildInHierarchy(GameObject* pGo)
 }
 
 
-void dae::GameObject::Initialize() const
+void dae::GameObject::Initialize()
 {
 	// don't check enabled, you always want to initialize
 
 	// update components
-	for (auto& upComponent : m_upComponentVec) upComponent->Initialize();
+	for (auto& upComponent : m_upComponentVec)
+	{
+		upComponent->Initialize();
+		upComponent->SetInitialized(true);
+
+	}
 
 	// update children -> make sure their components get initialized
 	for (GameObject* pChild : m_pChildrenVec) pChild->Initialize();
+
+	m_IsInitialised = true;
 }
 
 void dae::GameObject::Update() const
@@ -238,10 +252,24 @@ void dae::GameObject::Update() const
 		return;
 
 	// update components
-	for (auto& upComponent : m_upComponentVec) upComponent->Update();
+	for (auto& upComponent : m_upComponentVec)
+	{
+		if (upComponent->IsInitialized())
+		{
+			upComponent->Update();
+		}
+			
+	}
 
 	// update children
-	for (GameObject* pChild : m_pChildrenVec) pChild->Update();
+	for (GameObject* pChild : m_pChildrenVec)
+	{
+		if (pChild->IsInitialized())
+		{
+			pChild->Update();
+		}
+			
+	}
 }
 
 void dae::GameObject::FixedUpdate() const

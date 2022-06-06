@@ -18,6 +18,7 @@
 #include <EngineComponents/FPSComponent.h>
 #include <EngineComponents/RigidBodyComponent.h>
 #include <EngineComponents/BoxColliderComponent.h>
+#include <EngineComponents/AnimatorComponent.h>
 #include <Core/Physics.h>
 
 #include <Audio/BaseAudio.h>
@@ -103,7 +104,19 @@ void BurgerTimeGame::LoadGame() const
 	desc.type = RigidBodyComponent::RigidBodyType::Static;
 	rigidBody->SetInitialDescription(desc);
 	go->AddComponent<BoxColliderComponent>();
+	go->AddComponent<RenderComponent>();
+	auto animator = go->AddComponent<AnimatorComponent>();
+	AnimationSprite::SpriteDescription spriteDesc = AnimationSprite::SpriteDescription();
+	spriteDesc.framesPerSecond = 0.16f;
+	spriteDesc.nrAngles = 1;
+	spriteDesc.nrFrames = 3;
+	spriteDesc.nrPerType = { 1, 1, 1 };
 
+
+	int walk = animator->AddSpriteSheet("Textures/Player/PeterPepper_Walking.png", spriteDesc);
+
+	AnimatorComponent::AnimationDescription animDesc = AnimatorComponent::AnimationDescription(walk, true, 0, 3);
+	animator->AddAnimation(animDesc);
 
 	// Week 5
 	// Achievment Manager

@@ -35,6 +35,9 @@ void PrintSDLVersion()
 void dae::GEngine::Initialize()
 {
 
+	// tell the resource manager where he can find the game data
+	ResourceManager::GetInstance().Init("../BurgerTime/Resources/");
+
 	PrintSDLVersion();
 	
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) 
@@ -72,8 +75,6 @@ void dae::GEngine::Run()
 {
 	Initialize();
 
-	// tell the resource manager where he can find the game data
-	ResourceManager::GetInstance().Init("../Data/");
 
 	LoadGame();
 

@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include "BaseComponent.h"
-
+#include "misc/Structs.h"
 
 namespace dae
 {
@@ -24,9 +24,23 @@ namespace dae
 
 		void SetTexture(const std::string& filename);
 		void SetTexture(const std::shared_ptr<Texture2D>& newTexture);
+
+		void MirrorHorizontal(bool mirror);
+		void MirrorVertical(bool mirror);
+		void SetSourceRect(const SDL_Rect& rect);
+
+
 		void Render();
 
+		Texture2D* GetTexture() { return m_spTexture.get(); }
+
 	private:
+		void CalculateDimensions();
+
+		bool m_MirrorHorizontal;
+		bool m_MirrorVertical;
+		SDL_Rect m_srcRect;
+
 		std::shared_ptr<Texture2D> m_spTexture;
 	};
 }

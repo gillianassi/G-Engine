@@ -58,13 +58,15 @@ namespace dae
 		void Destroy();
 		bool IsMarkedForDestroy() { return m_IsMarkedForDestroy; }
 
+		bool IsInitialized() { return m_IsInitialised; }
+
 		Scene* GetScene() { return m_pScene; }
 
 	private:
 		friend Scene;
 		GameObject(const std::string& name, GameObject* pParent, Scene* pScene, bool propagateTags = true);
 
-		void Initialize() const;
+		void Initialize();
 		void Update() const;
 		void FixedUpdate() const;
 		void Render() const;
@@ -82,21 +84,24 @@ namespace dae
 
 		bool HasChildInHierarchy(GameObject* pGo);
 		
-		GameObject* m_pParent{};
-		std::vector<std::unique_ptr<BaseComponent>> m_upComponentVec{};
-		std::vector<GameObject*> m_pChildrenVec{};
-
 		std::string m_Name;
-		Scene* m_pScene{};
+		GameObject* m_pParent;
+		std::vector<std::unique_ptr<BaseComponent>> m_upComponentVec;
+		std::vector<GameObject*> m_pChildrenVec;
 
-		TransformComponent* m_pTransform{};
+		Scene* m_pScene;
+		TransformComponent* m_pTransform;
 
 
-		std::vector<int> m_Tags{};
+
+		std::vector<int> m_Tags;
 
 
-		bool m_IsMarkedForDestroy{ false };
-		bool m_IsEnabled{ true }, m_MarkedForEnable{ true };
+		bool m_IsMarkedForDestroy;
+		bool m_IsEnabled;
+		bool m_MarkedForEnable;
+		bool m_IsInitialised;
+
 
 	};
 

@@ -14,3 +14,5 @@
 #include <SDL.h>
 #pragma warning (pop)
 
+#include "Misc/Structs.h"
+
