@@ -77,19 +77,19 @@ void PeterPepperComponent::MoveLeft()
 void PeterPepperComponent::MoveRight()
 {
 	m_pRigidBodyComponent->SetLinearVelocity({ 50.0f, 0.0f });
-	m_pAnimator->PlayAnimation(MoveLeftIndx, true);
+	m_pAnimator->PlayAnimation(MoveRightIndx, true);
 }
 
 void PeterPepperComponent::MoveUp()
 {
 	m_pRigidBodyComponent->SetLinearVelocity({ 0.0f, -50.0f });
-	m_pAnimator->PlayAnimation(MoveLeftIndx, true);
+	m_pAnimator->PlayAnimation(MoveUpIndx, true);
 }
 
 void PeterPepperComponent::MoveDown()
 {
 	m_pRigidBodyComponent->SetLinearVelocity({ 0.0f, 50.0f });
-	m_pAnimator->PlayAnimation(MoveLeftIndx, true);
+	m_pAnimator->PlayAnimation(MoveDownIndx, true);
 }
 
 
