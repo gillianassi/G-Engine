@@ -46,7 +46,6 @@ void dae::Renderer::StartDraw() const
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
 
-
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_Window);
 	ImGui::NewFrame();
@@ -54,7 +53,6 @@ void dae::Renderer::StartDraw() const
 
 void dae::Renderer::Render() const
 {
-
 
 
 	//SceneManager::GetInstance().Render();
@@ -121,6 +119,27 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 		flip = static_cast<SDL_RendererFlip>(flip | SDL_FLIP_VERTICAL);
 	}
 	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dst, 0.0, NULL, flip);
+}
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, const TransformDescription& descr) const
+{
+	SDL_Rect dst{};
+	dst.x = static_cast<int>(descr.x);
+	dst.y = static_cast<int>(descr.y);
+	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
+	dst.w = static_cast<int>(dst.w * descr.scaleX);
+	dst.h = static_cast<int>(dst.h * descr.scaleY);
+
+	SDL_RendererFlip flip{};
+	if (descr.mirrorHorizontal)
+	{
+		flip = static_cast<SDL_RendererFlip>(flip | SDL_FLIP_HORIZONTAL);
+	}
+	if (descr.mirrorVertical)
+	{
+		flip = static_cast<SDL_RendererFlip>(flip | SDL_FLIP_VERTICAL);
+	}
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &descr.srcRect, &dst, 0.0, NULL, flip);
 }
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const

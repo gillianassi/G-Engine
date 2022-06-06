@@ -39,7 +39,7 @@ void dae::BoxColliderComponent::RenderImGui()
 {
 }
 
-void dae::BoxColliderComponent::SetColliderTransform(BoxColliderDescr descr)
+void dae::BoxColliderComponent::SetInitialDescription(BoxColliderDescr descr)
 {
 	m_Description = descr;
 }

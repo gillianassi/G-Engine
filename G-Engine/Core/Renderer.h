@@ -1,8 +1,10 @@
 #pragma once
 #include "Singleton.h"
 
+
 namespace dae
 {
+	class RenderLayer;
 	class Texture2D;
 	/**
 	 * Simple RAII wrapper for the SDL renderer
@@ -12,7 +14,18 @@ namespace dae
 		SDL_Renderer* m_Renderer{};
 		SDL_Window* m_Window{};
 		SDL_Color m_clearColor{};	
+
 	public:
+		struct TransformDescription
+		{
+			float x;
+			float y;
+			SDL_Rect srcRect;
+			bool mirrorHorizontal;
+			bool mirrorVertical;
+			float scaleX;
+			float scaleY;
+		};
 		void Init(SDL_Window* window);
 
 		void StartDraw() const;
@@ -22,6 +35,7 @@ namespace dae
 
 		void RenderTexture(const Texture2D& texture, const float x, const float y) const;
 		void RenderTexture(const Texture2D& texture, const float x, const float y, const SDL_Rect& srcRect, bool mirrorHorizontal, bool mirrorVertical) const;
+		void RenderTexture(const Texture2D& texture, const TransformDescription& descr) const;
 		void RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const;
 		void RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, const SDL_Rect& srcRect, bool mirrorHorizontal, bool mirrorVertical) const;
 		void DrawRect(glm::vec2 pos, float width, float height, glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
@@ -34,6 +48,7 @@ namespace dae
 
 	private:
 		void ShowDearImGuiExercises() const;
+
 	};
 }
 

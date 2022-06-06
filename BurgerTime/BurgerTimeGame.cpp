@@ -118,6 +118,34 @@ void BurgerTimeGame::LoadGame() const
 	AnimatorComponent::AnimationDescription animDesc = AnimatorComponent::AnimationDescription(walk, true, 0, 3);
 	animator->AddAnimation(animDesc);
 
+
+	float platformScale = 3.f;
+	for (size_t i = 0; i < 10; i++)
+	{
+		// create game object
+		go = scene.AddChild("platform" + i);
+		// place platform
+		go->GetTransform()->SetPosition(10.f+ 16.f * i * platformScale, 100.f);
+		// create physics
+		rigidBody = go->AddComponent<RigidBodyComponent>();
+
+		desc = RigidBodyComponent::RigidBodyDescription();
+		desc.position = go->GetTransform()->GetWorldPosition();
+		desc.type = RigidBodyComponent::RigidBodyType::Static;
+		rigidBody->SetInitialDescription(desc);
+		auto collider = go->AddComponent<BoxColliderComponent>();
+		BoxColliderComponent::BoxColliderDescr colliderDesc{};
+		colliderDesc.Width = 16.f * platformScale;
+		colliderDesc.Height = 4.f * platformScale;
+		collider->SetInitialDescription(colliderDesc);
+		// render
+		auto visuals = go->AddChild("visuals" + 1);
+		RenderComponent* renderer = visuals->AddComponent<RenderComponent>();
+		renderer->SetTexture("Textures/Level/Platform.png");
+		renderer->SetScale(platformScale, platformScale);
+		visuals->GetTransform()->SetPosition(-8.f * platformScale, - 1.f * platformScale);
+	}
+
 	// Week 5
 	// Achievment Manager
 	auto achievement = scene.AddChild("achievement");

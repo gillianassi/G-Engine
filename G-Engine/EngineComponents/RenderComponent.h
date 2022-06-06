@@ -29,6 +29,7 @@ namespace dae
 		void MirrorVertical(bool mirror);
 		void SetSourceRect(const SDL_Rect& rect);
 
+		void SetScale(float scaleX, float scaleY);
 
 		void Render();
 
@@ -37,6 +38,8 @@ namespace dae
 	private:
 		void CalculateDimensions();
 
+
+		float m_ScaleX, m_ScaleY;
 		bool m_MirrorHorizontal;
 		bool m_MirrorVertical;
 		SDL_Rect m_srcRect;

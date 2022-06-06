@@ -40,12 +40,13 @@ namespace dae
 		virtual void Render() override;
 		virtual void RenderImGui() override;
 
-		void SetColliderTransform(BoxColliderDescr descr);
+		void SetInitialDescription(BoxColliderDescr descr);
 
 		void SetWidth(float width);
 		void SetHeight(float height);
 		void SetPivot(float pivotX, float pivotY);
 		void SetRotation(float rotation);
+
 
 		void SetRenderColor(glm::vec4 color) { m_Color = color; }
 	

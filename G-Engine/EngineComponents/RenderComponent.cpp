@@ -11,7 +11,9 @@ dae::RenderComponent::RenderComponent(GameObject* pOwner):
 	m_spTexture{},
 	m_MirrorHorizontal{false},
 	m_MirrorVertical{false},
-	m_srcRect{}
+	m_srcRect{},
+	m_ScaleX{1.f},
+	m_ScaleY{1.f}
 {
 
 }
@@ -43,12 +45,27 @@ void dae::RenderComponent::SetSourceRect(const SDL_Rect& rect)
 	m_srcRect = rect;
 }
 
+void dae::RenderComponent::SetScale(float scaleX, float scaleY)
+{
+	m_ScaleX = scaleX;
+	m_ScaleY = scaleY;
+}
+
 void dae::RenderComponent::Render()
 {
 	if (m_spTexture)
 	{
 		const auto& pos = m_pOwner->GetTransform()->GetWorldPosition();
-		dae::Renderer::GetInstance().RenderTexture(*m_spTexture, pos.x, pos.y , m_srcRect, m_MirrorHorizontal, m_MirrorVertical);
+		Renderer::TransformDescription descr{};
+		descr.x = pos.x;
+		descr.y = pos.y;
+		descr.srcRect = m_srcRect;
+		descr.mirrorHorizontal = m_MirrorHorizontal;
+		descr.mirrorVertical = m_MirrorVertical;
+		descr.scaleX = m_ScaleX;
+		descr.scaleY = m_ScaleY;
+
+		dae::Renderer::GetInstance().RenderTexture(*m_spTexture, descr);
 	}
 }
 
